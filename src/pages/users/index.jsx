@@ -1,7 +1,21 @@
+import { useEffect, useState } from 'react';
+
 import UsersTable from './components/users-table';
 import users from '../../dev-data/users.json';
+import { getUsers } from '../../services/user';
 
 const UsersPage = () => {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    const data = await getUsers();
+    setUsers(data);
+  };
+
   return (
     <>
       <div className="mb-12 flex items-center justify-between">
