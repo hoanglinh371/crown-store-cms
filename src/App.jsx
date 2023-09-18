@@ -5,7 +5,9 @@ import router from './router';
 
 const App = () => {
   return (
-    <Suspense>
+    <Suspense
+    // fallback={<span className="loading loading-spinner loading-lg"></span>}
+    >
       <RouterProvider router={router} />
     </Suspense>
   );

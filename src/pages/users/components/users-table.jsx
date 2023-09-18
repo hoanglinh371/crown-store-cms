@@ -2,17 +2,18 @@ import React from 'react';
 import { Pencil } from 'lucide-react';
 
 import DeleteModalTrigger from './delete-modal-trigger';
+import { RESULT_PER_PAGE } from '../../../constants';
 
 const UsersTable = ({ users }) => {
   const editModalId = React.useId();
   const deleteModalId = React.useId();
 
   return (
-    <div className="overflow-x-auto">
+    <div className="flex flex-col items-center space-y-10 overflow-x-auto">
       <table className="table table-zebra">
         <thead>
           <tr>
-            <th></th>
+            <th>#</th>
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -22,10 +23,10 @@ const UsersTable = ({ users }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user, index) => (
+          {users.slice(0, 10).map((user, index) => (
             <tr key={index}>
               <th>{index + 1}</th>
-              <td>{user.name}</td>
+              <td>{`${user.first_name} ${user.last_name}`}</td>
               <td>{user.email}</td>
               <td>{user.phone}</td>
               <td>{user.address}</td>
@@ -57,6 +58,13 @@ const UsersTable = ({ users }) => {
           ))}
         </tbody>
       </table>
+
+      <div className="join">
+        <button className="btn join-item btn-sm">1</button>
+        <button className="btn join-item btn-active btn-sm">2</button>
+        <button className="btn join-item btn-sm">3</button>
+        <button className="btn join-item btn-sm">4</button>
+      </div>
     </div>
   );
 };

@@ -15,4 +15,21 @@ export const menuItems = [
     path: '/users',
     title: 'Users',
   },
+  {
+    title: 'Setting',
+    children: [
+      {
+        path: '/settings/materials',
+        title: 'Materials',
+      },
+      {
+        path: '/settings/colors',
+        title: 'Colors',
+      },
+      {
+        path: '/settings/sizes',
+        title: 'Sizes',
+      },
+    ],
+  },
 ];

@@ -15,12 +15,27 @@ const Sidebar = () => {
     <aside>
       <div className="h-full w-80 border-r">
         <CurrentUser {...user} />
-        <ul className="menu menu-lg">
-          {menuItems.map(({ path, title }) => (
-            <li key={path}>
-              <NavLink to={path}>{title}</NavLink>
-            </li>
-          ))}
+        <ul className="menu menu-md">
+          {menuItems.map((item) =>
+            item.children ? (
+              <li key={item.title}>
+                <details open>
+                  <summary>{item.title}</summary>
+                  <ul>
+                    {item.children.map((child) => (
+                      <li key={child.title}>
+                        <NavLink to={child.path}>{child.title}</NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            ) : (
+              <li key={item.title}>
+                <NavLink to={item.path}>{item.title}</NavLink>
+              </li>
+            ),
+          )}
         </ul>
       </div>
     </aside>

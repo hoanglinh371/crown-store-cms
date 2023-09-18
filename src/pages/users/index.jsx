@@ -1,69 +1,7 @@
 import UsersTable from './components/users-table';
+import users from '../../dev-data/users.json';
 
 const UsersPage = () => {
-  const users = [
-    {
-      name: 'Gaye Cone',
-      email: 'gcone0@networksolutions.com',
-      phone: '703-507-9146',
-      address: '1638 Coolidge Parkway',
-    },
-    {
-      name: 'Reiko Bourdon',
-      email: 'rbourdon1@youku.com',
-      phone: '610-640-2539',
-      address: '3340 Haas Road',
-    },
-    {
-      name: 'Wilfrid Scarf',
-      email: 'wscarf2@dell.com',
-      phone: '993-306-9491',
-      address: '39884 Coolidge Point',
-    },
-    {
-      name: 'Boigie Stanlack',
-      email: 'bstanlack3@trellian.com',
-      phone: '245-615-2562',
-      address: '860 Fordem Point',
-    },
-    {
-      name: 'Flori Mott',
-      email: 'fmott4@tamu.edu',
-      phone: '250-991-9396',
-      address: '52 Lake View Street',
-    },
-    {
-      name: 'Abey Pestricke',
-      email: 'apestricke5@goo.ne.jp',
-      phone: '529-494-5511',
-      address: '6 Parkside Pass',
-    },
-    {
-      name: "Romonda O'Fearguise",
-      email: 'rofearguise6@zdnet.com',
-      phone: '245-239-8625',
-      address: '1 Springview Lane',
-    },
-    {
-      name: 'Reena Johanssen',
-      email: 'rjohanssen7@comcast.net',
-      phone: '619-900-2384',
-      address: '9 Dakota Circle',
-    },
-    {
-      name: 'Leonerd Yetton',
-      email: 'lyetton8@123-reg.co.uk',
-      phone: '261-971-7056',
-      address: '83 Myrtle Park',
-    },
-    {
-      name: 'Vaclav Lunney',
-      email: 'vlunney9@miitbeian.gov.cn',
-      phone: '445-637-2533',
-      address: '4749 Amoth Crossing',
-    },
-  ];
-
   return (
     <>
       <div className="mb-12 flex items-center justify-between">
