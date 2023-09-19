@@ -6,13 +6,14 @@ import {
 } from 'react-router-dom';
 
 import MainLayout from './layouts/main-layout';
-import AuthLayout from './layouts/auth-layout';
+// import AuthLayout from './layouts/auth-layout';
 
 const DashBoard = lazy(() => import('./pages/dashboard'));
 const ProductsPage = lazy(() => import('./pages/products'));
 const CategoriesPage = lazy(() => import('./pages/categories'));
+const BrandsPage = lazy(() => import('./pages/brands'));
 const UsersPage = lazy(() => import('./pages/users'));
-const LoginPage = lazy(() => import('./pages/login'));
+// const LoginPage = lazy(() => import('./pages/login'));
 
 const Material = lazy(() => import('./pages/settings/material'));
 const Color = lazy(() => import('./pages/settings/color'));
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route index element={<DashBoard />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
+      <Route path="/brands" element={<BrandsPage />} />
       <Route path="/users" element={<UsersPage />} />
       <Route path="/settings/materials" element={<Material />} />
       <Route path="/settings/colors" element={<Color />} />

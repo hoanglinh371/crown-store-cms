@@ -12,6 +12,10 @@ export const menuItems = [
     title: 'Categories',
   },
   {
+    path: '/brands',
+    title: 'Brands',
+  },
+  {
     path: '/users',
     title: 'Users',
   },
