@@ -1,8 +1,7 @@
 import React from 'react';
-import { Pencil } from 'lucide-react';
 
-import DeleteModalTrigger from './delete-modal-trigger';
-import { RESULT_PER_PAGE } from '../../../constants';
+import DeleteModalTrigger from '../../../components/delete-modal-trigger';
+import EditUserModalTrigger from './edit-user-modal-trigger';
 
 const UsersTable = ({ users }) => {
   const editModalId = React.useId();
@@ -31,25 +30,7 @@ const UsersTable = ({ users }) => {
               <td>{user.phone}</td>
               <td>{user.address}</td>
               <td>
-                <Pencil
-                  size={16}
-                  color="#4bb543"
-                  className="cursor-pointer"
-                  onClick={() =>
-                    document.getElementById('my_modal_2').showModal()
-                  }
-                />
-                <dialog id="my_modal_2" className="modal">
-                  <div className="modal-box">
-                    <h3 className="text-lg font-bold">Hello!</h3>
-                    <p className="py-4">
-                      Press ESC key or click outside to close
-                    </p>
-                  </div>
-                  <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
-                  </form>
-                </dialog>
+                <EditUserModalTrigger modalId={editModalId} />
               </td>
               <td>
                 <DeleteModalTrigger modalId={deleteModalId} />

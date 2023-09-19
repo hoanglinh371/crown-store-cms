@@ -6,11 +6,13 @@ import {
 } from 'react-router-dom';
 
 import MainLayout from './layouts/main-layout';
+import AuthLayout from './layouts/auth-layout';
 
 const DashBoard = lazy(() => import('./pages/dashboard'));
 const ProductsPage = lazy(() => import('./pages/products'));
 const CategoriesPage = lazy(() => import('./pages/categories'));
 const UsersPage = lazy(() => import('./pages/users'));
+const LoginPage = lazy(() => import('./pages/login'));
 
 const Material = lazy(() => import('./pages/settings/material'));
 const Color = lazy(() => import('./pages/settings/color'));
