@@ -8,7 +8,7 @@ import router from './router';
 const App = () => {
   return (
     <Suspense
-    // fallback={<span className="loading loading-spinner loading-lg"></span>}
+      fallback={<span className="loading loading-bars loading-lg"></span>}
     >
       <RouterProvider router={router} />
       <ToastContainer position="bottom-right" />
