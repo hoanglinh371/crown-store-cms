@@ -1,7 +1,7 @@
 import { useState, useEffect, useId } from 'react';
 
 import ColorsTable from './components/colors-table';
-import { getColors } from '../../services/color';
+import { getColors } from '@/services/color';
 import AddEditColorModal from './components/add-edit-color-modal';
 
 export default function Color() {

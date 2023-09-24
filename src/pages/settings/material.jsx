@@ -1,7 +1,7 @@
 import { useState, useEffect, useId } from 'react';
 
 import MaterialTable from './components/material-table';
-import { getMaterials } from '../../services';
+import { getMaterials } from '@/services';
 import AddEditMaterialModal from './components/add-edit-material-modal';
 
 export default function Material() {

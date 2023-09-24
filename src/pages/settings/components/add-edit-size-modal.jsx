@@ -4,8 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { Pencil, Plus } from 'lucide-react';
 
-import Input from '../../../components/input';
-import { ERROR_MESSAGE } from '../../../constants';
+import Input from '@/components/input';
+import { ERROR_MESSAGE } from '@/constants';
 
 const schema = yup.object().shape({
   size_value: yup.string().required(ERROR_MESSAGE.REQUIRED),

@@ -1,7 +1,7 @@
 import { useId } from 'react';
 
-import DeleteModalTrigger from '../../../components/delete-modal-trigger';
-import AddEditMaterialModal from '../components/add-edit-material-modal';
+import DeleteModalTrigger from '@/components/delete-modal-trigger';
+import AddEditColorModal from './add-edit-color-modal';
 
 export default function ColorTable({ colors }) {
   const modalId = useId();
@@ -33,9 +33,9 @@ export default function ColorTable({ colors }) {
                 ></div>
               </td>
               <td>
-                <AddEditMaterialModal
+                <AddEditColorModal
                   modalId={color.id + editModalId}
-                  material={color}
+                  color={color}
                 />
               </td>
               <td>

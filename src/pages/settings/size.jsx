@@ -1,7 +1,7 @@
 import { useState, useEffect, useId } from 'react';
 
 import SizeTable from './components/size-table';
-import { getSizes } from '../../services';
+import { getSizes } from '@/services';
 import AddEditSizeModal from './components/add-edit-size-modal';
 
 export default function Size() {

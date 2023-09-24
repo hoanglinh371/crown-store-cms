@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-import DeleteModalTrigger from '../../../components/delete-modal-trigger';
+import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import AddEditSizeModal from '../components/add-edit-size-modal';
 
 export default function SizeTable({ sizes }) {

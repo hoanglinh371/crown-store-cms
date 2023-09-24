@@ -1,6 +1,6 @@
 import { useId } from 'react';
 
-import DeleteModalTrigger from '../../../components/delete-modal-trigger';
+import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import AddEditMaterialModal from '../components/add-edit-material-modal';
 
 export default function MaterialTable({ materials }) {
