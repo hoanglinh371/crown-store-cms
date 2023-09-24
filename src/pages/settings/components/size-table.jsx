@@ -1,7 +1,7 @@
 import { useId } from 'react';
 
 import DeleteModalTrigger from '../../../components/delete-modal-trigger';
-import AddEditMaterialModal from '../components/add-edit-material-modal';
+import AddEditSizeModal from '../components/add-edit-size-modal';
 
 export default function SizeTable({ sizes }) {
   const modalId = useId();
@@ -28,10 +28,7 @@ export default function SizeTable({ sizes }) {
               <td>{size.width}</td>
               <td>{size.height}</td>
               <td>
-                <AddEditMaterialModal
-                  modalId={size.id + editModalId}
-                  material={size}
-                />
+                <AddEditSizeModal modalId={size.id + editModalId} size={size} />
               </td>
               <td>
                 <DeleteModalTrigger modalId={modalId} />

@@ -1,6 +1,6 @@
 import { useState, useEffect, useId } from 'react';
 
-import MaterialTable from './components/material-table';
+import SizeTable from './components/size-table';
 import { getSizes } from '../../services';
 import AddEditSizeModal from './components/add-edit-size-modal';
 
@@ -28,7 +28,7 @@ export default function Size() {
 
         <AddEditSizeModal modalId={modalId} />
       </div>
-      <MaterialTable sizes={sizes} />
+      <SizeTable sizes={sizes} />
     </>
   );
 }
