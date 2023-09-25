@@ -6,6 +6,7 @@ import { Pencil, Plus } from 'lucide-react';
 
 import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
+import { createColor } from '@/services';
 
 const schema = yup.object().shape({
   color_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -25,7 +26,8 @@ export default function AddEditColorModal({ modalId, color }) {
 
   const handleSubmitForm = async (values) => {
     console.log(values);
-    reset();
+    await createColor(values);
+    // reset();
     document.getElementById(modalId).close();
   };
 
