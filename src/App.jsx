@@ -3,13 +3,13 @@ import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import Spinner from './components/spinner';
+
 import router from './router';
 
 const App = () => {
   return (
-    <Suspense
-      fallback={<span className="loading loading-bars loading-lg"></span>}
-    >
+    <Suspense fallback={<Spinner />}>
       <RouterProvider router={router} />
       <ToastContainer position="bottom-right" />
     </Suspense>
