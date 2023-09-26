@@ -1,15 +1,17 @@
 import React from 'react';
 
-import DeleteModalTrigger from '../../../components/delete-modal-trigger';
+import { useId } from 'react';
+
+import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import EditProductModelTrigger from './edit-products-modal-trigger';
 
 const ProductsTable = ({ products }) => {
-  const editModalId = React.useId();
-  const deleteModalId = React.useId();
+  const modalId = useId();
+  const editModalId = useId();
 
   return (
     <div className="flex flex-col items-center space-y-10 overflow-x-auto">
-      <table className=" table table-xs">
+      <table className=" table table-zebra">
         <thead>
           <tr>
             <th>#</th>
@@ -23,19 +25,29 @@ const ProductsTable = ({ products }) => {
           </tr>
         </thead>
         <tbody>
-          {products.slice(0, 10).map((products, index) => (
+          {products.slice(0, 10).map((product, index) => (
             <tr key={index}>
               <th>{index + 1}</th>
-              <td>{`${products.product_name} `}</td>
-              <td>{products.product_desc}</td>
-              <td>{products.product_image}</td>
-              <td>{products.category_id}</td>
-              <td>{products.brand_id}</td>
+              <td>{product.product_name}</td>
+              <td>{product.product_desc.slice(0, 50)}</td>
               <td>
-                <EditProductModelTrigger modalId={editModalId} />
+                <img
+                  src={product.product_image}
+                  alt="product_image"
+                  width={300}
+                  height={300}
+                />
+              </td>
+              <td>{product.category_id}</td>
+              <td>{product.brand_id}</td>
+              <td>
+                <EditProductModelTrigger
+                  modalId={product.id + editModalId}
+                  product={product}
+                />
               </td>
               <td>
-                <DeleteModalTrigger modalId={deleteModalId} />
+                <DeleteModalTrigger modalId={modalId} />
               </td>
             </tr>
           ))}

@@ -9,23 +9,16 @@ import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
 
 const schema = yup.object().shape({
-  product_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  product_desc: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  product_image: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  category_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
-  brand_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
+  category_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
+  category_image: yup.string().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const EditProductModelTrigger = ({ modalId, product }) => {
+const AddEditCategoryModal = ({ modalId, category }) => {
   const formId = useId();
-
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      product_name: product ? product.product_name : '',
-      product_desc: product ? product.product_desc : '',
-      product_image: product ? product.product_image : '',
-      category_id: product ? product.category_id : 0,
-      brand_id: product ? product.brand_id : 0,
+      category_name: category ? category.category_name : '',
+      category_image: category ? category.category_image : '',
     },
     resolver: yupResolver(schema),
   });
@@ -37,8 +30,8 @@ const EditProductModelTrigger = ({ modalId, product }) => {
   };
 
   return (
-    <>
-      {product ? (
+    <div>
+      {category ? (
         <Pencil
           size={16}
           color="#4bb543"
@@ -51,10 +44,9 @@ const EditProductModelTrigger = ({ modalId, product }) => {
           onClick={() => document.getElementById(modalId).showModal()}
         >
           <Plus />
-          Add New Product
+          Add New Category
         </button>
       )}
-
       <dialog id={modalId} className="modal">
         <div className="modal-box">
           <h3 className="text-lg font-bold">Hello!</h3>
@@ -66,42 +58,19 @@ const EditProductModelTrigger = ({ modalId, product }) => {
             className="w-full space-y-4"
             onSubmit={handleSubmit(handleSubmitForm)}
           >
-            <div className="mb-3 flex gap-4">
-              <Input
-                type="text"
-                label="Product Name"
-                name="product_name"
-                control={control}
-              />
-              <Input
-                type="text"
-                label="Product Image"
-                name="product_image"
-                control={control}
-              />
-            </div>
             <Input
               type="text"
-              label="Product Description"
-              name="product_desc"
+              label="Category Name"
+              name="category_name"
               control={control}
             />
-            <div className="mb-3 flex gap-4">
-              <Input
-                type="number"
-                label="Product Categoriy"
-                name="category_id"
-                control={control}
-              />
-              <Input
-                type="number"
-                label="Product Brand"
-                name="brand_id"
-                control={control}
-              />
-            </div>
+            <Input
+              type="text"
+              label="Category Image"
+              name="category_image"
+              control={control}
+            />
           </form>
-
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
               <button className="btn btn-primary" form={formId}>
@@ -114,7 +83,8 @@ const EditProductModelTrigger = ({ modalId, product }) => {
           </div>
         </div>
       </dialog>
-    </>
+    </div>
   );
 };
-export default EditProductModelTrigger;
+
+export default AddEditCategoryModal;

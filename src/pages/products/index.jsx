@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useId } from 'react';
 
+import EditProductModelTrigger from './components/edit-products-modal-trigger';
 import ProductsTable from './components/products-table';
-import { getProducts } from '../../services/products';
+import { getProducts } from '@/services';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const modalId = useId();
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      const data = await getProducts();
+      setProducts(data);
+    };
+
     fetchProducts();
   }, []);
 
-  const fetchProducts = async () => {
-    const data = await getProducts();
-    setProducts(data);
-  };
   return (
     <>
       <div className="mb-12 flex items-center justify-between">
@@ -22,23 +25,7 @@ const ProductsPage = () => {
           placeholder="Type here"
           className="input input-bordered w-full max-w-xs"
         />
-        <button
-          className="btn"
-          onClick={() => document.getElementById('my_modal_3').showModal()}
-        >
-          open modal
-        </button>
-        <dialog id="my_modal_3" className="modal">
-          <div className="modal-box">
-            <form method="dialog">
-              <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
-                ✕
-              </button>
-            </form>
-            <h3 className="text-lg font-bold">Hello!</h3>
-            <p className="py-4">Press ESC key or click on ✕ button to close</p>
-          </div>
-        </dialog>
+        <EditProductModelTrigger modalId={modalId} />
       </div>
       <ProductsTable products={products} />
     </>
