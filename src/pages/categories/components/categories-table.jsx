@@ -24,7 +24,14 @@ const CategoriesTable = ({ categories }) => {
             <tr key={index}>
               <th>{index + 1}</th>
               <td>{category.category_name}</td>
-              <td>{category.category_image}</td>
+              <td>
+                <img
+                  src={category.category_image}
+                  alt="catefory_image"
+                  width={300}
+                  height={300}
+                />
+              </td>
               <td>
                 <AddEditCategoryModal
                   modalId={category.id + editModalId}
