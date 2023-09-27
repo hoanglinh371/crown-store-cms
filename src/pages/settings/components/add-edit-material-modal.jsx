@@ -3,9 +3,13 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { Pencil, Plus } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import Input from '@/components/input';
+import Textarea from '@/components/textarea';
+
 import { ERROR_MESSAGE } from '@/constants';
+import { createMaterial, updateMaterial } from '@/services';
 
 const schema = yup.object().shape({
   material_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -13,6 +17,7 @@ const schema = yup.object().shape({
 });
 
 export default function AddEditMaterialModal({ modalId, material }) {
+  const queryClient = useQueryClient();
   const formId = useId();
 
   const { control, handleSubmit, reset } = useForm({
@@ -23,9 +28,15 @@ export default function AddEditMaterialModal({ modalId, material }) {
     resolver: yupResolver(schema),
   });
 
+  const mutation = useMutation({
+    mutationFn: material ? updateMaterial : createMaterial,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['materials'] });
+    },
+  });
+
   const handleSubmitForm = async (values) => {
-    console.log(values);
-    reset();
+    mutation.mutate(values);
     document.getElementById(modalId).close();
   };
 
@@ -49,8 +60,10 @@ export default function AddEditMaterialModal({ modalId, material }) {
       )}
       <dialog id={modalId} className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Hello!</h3>
-          <p className="py-4">
+          <h3 className="text-lg font-bold">
+            {material ? 'Edit Material' : 'Add New Material'}
+          </h3>
+          <p className="py-4 text-xs font-medium italic">
             Press ESC key or click the button below to close
           </p>
           <form
@@ -64,7 +77,7 @@ export default function AddEditMaterialModal({ modalId, material }) {
               name="material_name"
               control={control}
             />
-            <Input
+            <Textarea
               type="text"
               label="Material Description"
               name="material_desc"

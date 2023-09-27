@@ -1,9 +1,16 @@
-const Dashboard = () => {
+import { useState } from 'react';
+
+import BaseDialog from '@/components/dialog';
+
+export default function Dashboard() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div>
-      <p>Dashboard</p>
+      <button className="btn" onClick={() => setIsOpen(true)}>
+        Open
+      </button>
+      <BaseDialog isOpen={isOpen} closeDialog={() => setIsOpen(false)} />
     </div>
   );
-};
-
-export default Dashboard;
+}
