@@ -11,14 +11,11 @@ import Spinner from '@/components/spinner';
 export default function Material() {
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
+
   const { data, isLoading } = useQuery({
     queryKey: ['materials', page],
     queryFn: () => getMaterials({ page }),
   });
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
 
   return (
     <div className="flex flex-col gap-12">
