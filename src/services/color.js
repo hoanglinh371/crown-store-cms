@@ -1,7 +1,7 @@
 import instance from './axios';
 
-export const getColors = async () => {
-  const response = await instance.get('/colors');
+export const getColors = async (params) => {
+  const response = await instance.get('/colors', { params });
   return response;
 };
 

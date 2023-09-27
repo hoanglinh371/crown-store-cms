@@ -1,5 +1,6 @@
 import { Fragment } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { getColors } from '@/services/color';
 
@@ -8,9 +9,12 @@ import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Spinner from '@/components/spinner';
 
 export default function Color() {
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') ?? 1;
+
   const { data, isLoading } = useQuery({
-    queryKey: ['colors'],
-    queryFn: getColors,
+    queryKey: ['colors', page],
+    queryFn: () => getColors({ page }),
   });
 
   return (
@@ -66,10 +70,17 @@ export default function Color() {
             </tbody>
           </table>
           <div className="join self-center">
-            <button className="btn join-item btn-sm">1</button>
-            <button className="btn join-item btn-active btn-sm">2</button>
-            <button className="btn join-item btn-sm">3</button>
-            <button className="btn join-item btn-sm">4</button>
+            {Array.from({ length: data.pagination.total_pages }, (_, index) => (
+              <Link
+                key={index}
+                to={`/settings/colors?page=${index + 1}`}
+                className={`btn join-item btn-sm ${
+                  data.pagination.current_page === index + 1 ? 'btn-active' : ''
+                }`}
+              >
+                {index + 1}
+              </Link>
+            ))}
           </div>
         </Fragment>
       )}
