@@ -4,9 +4,14 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { Pencil, Plus } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import Input from '@/components/input';
+import Textarea from '@/components/textarea';
+import Select from '@/components/select';
+
 import { ERROR_MESSAGE } from '@/constants';
+import { createProduct, updateProduct } from '@/services';
 
 const schema = yup.object().shape({
   product_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -16,7 +21,8 @@ const schema = yup.object().shape({
   brand_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const EditProductModelTrigger = ({ modalId, product }) => {
+const AddEditProductModel = ({ modalId, product }) => {
+  const queryClient = useQueryClient();
   const formId = useId();
 
   const { control, handleSubmit, reset } = useForm({
@@ -30,11 +36,25 @@ const EditProductModelTrigger = ({ modalId, product }) => {
     resolver: yupResolver(schema),
   });
 
+  const mutation = useMutation({
+    mutationFn: product ? updateProduct : createProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+
   const handleSubmitForm = async (values) => {
-    console.log(values);
-    reset();
+    mutation.mutate(values);
     document.getElementById(modalId).close();
   };
+
+  const optionBrand = [
+    { value: 1, label: 'Shanahan Inc' },
+    { value: 2, label: 'Schumm-Larkin' },
+    { value: 3, label: 'Spinka Inc' },
+    { value: 4, label: 'Grimes, Lueilwitz and Funk' },
+    { value: 5, label: 'Schaefer Inc' },
+  ];
 
   return (
     <>
@@ -57,8 +77,10 @@ const EditProductModelTrigger = ({ modalId, product }) => {
 
       <dialog id={modalId} className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Hello!</h3>
-          <p className="py-4">
+          <h3 className="text-lg font-bold">
+            {product ? 'Edit Product' : 'Add New Product'}
+          </h3>
+          <p className="py-4 text-xs font-medium italic">
             Press ESC key or click the button below to close
           </p>
           <form
@@ -80,23 +102,23 @@ const EditProductModelTrigger = ({ modalId, product }) => {
                 control={control}
               />
             </div>
-            <Input
+            <Textarea
               type="text"
               label="Product Description"
               name="product_desc"
               control={control}
             />
             <div className="mb-3 flex gap-4">
-              <Input
-                type="number"
+              <Select
                 label="Product Categoriy"
                 name="category_id"
+                options={optionBrand}
                 control={control}
               />
-              <Input
-                type="number"
+              <Select
                 label="Product Brand"
                 name="brand_id"
+                options={optionBrand}
                 control={control}
               />
             </div>
@@ -117,4 +139,4 @@ const EditProductModelTrigger = ({ modalId, product }) => {
     </>
   );
 };
-export default EditProductModelTrigger;
+export default AddEditProductModel;
