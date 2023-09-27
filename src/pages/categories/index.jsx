@@ -1,8 +1,10 @@
 import { useState, useEffect, useId } from 'react';
 
-import CategoriesTable from './components/categories-table';
 import { getCategory } from '@/services';
+
+import CategoriesTable from './components/categories-table';
 import AddEditCategoryModal from './components/add-edit-categoty-modal';
+import Spinner from '@/components/spinner';
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState([]);
