@@ -48,12 +48,13 @@ const CategoriesPage = () => {
                   <th>{category.id}</th>
                   <td>{category.category_name}</td>
                   <td>
-                    <img
-                      src={category.category_image}
-                      alt="category_image"
-                      width={300}
-                      height={300}
-                    />
+                    <div className="w-32">
+                      <img
+                        src={category.category_image}
+                        alt="category_image"
+                        className="h-36 max-w-full"
+                      />
+                    </div>
                   </td>
                   <td>
                     <AddEditCategoryModal

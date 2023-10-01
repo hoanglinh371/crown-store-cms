@@ -39,8 +39,6 @@ const ProductsPage = () => {
                 <th>Name</th>
                 <th>Description</th>
                 <th>Image</th>
-                <th>Category</th>
-                <th>Brand</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -50,12 +48,16 @@ const ProductsPage = () => {
                 <tr key={index} className="hover">
                   <th>{product.id}</th>
                   <td>{product.product_name}</td>
-                  <td>{product.product_desc.slice(0, 50)}</td>
+                  <td>{product.product_desc}</td>
                   <td>
-                    <img src={product.product_image} alt="product_image" />
+                    <div className="w-32">
+                      <img
+                        src={product.product_image}
+                        alt="product_image"
+                        className="h-36 w-full "
+                      />
+                    </div>
                   </td>
-                  <td>{product.category_id}</td>
-                  <td>{product.brand_id}</td>
                   <td>
                     <AddEditProductModel
                       modalId={`product-${product.id}`}
