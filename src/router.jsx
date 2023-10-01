@@ -11,28 +11,11 @@ const BrandsPage = lazy(() => import('./pages/brands'));
 const UsersPage = lazy(() => import('./pages/users'));
 const ProductDetail = lazy(() => import('./pages/product-detail'));
 const LoginPage = lazy(() => import('./pages/login'));
-
 const Material = lazy(() => import('./pages/settings/material'));
 const Color = lazy(() => import('./pages/settings/color'));
 const Size = lazy(() => import('./pages/settings/size'));
-
-// const router = createBrowserRouter(
-//   createRoutesFromElements(
-//     <Route path="/" element={<MainLayout />}>
-//       <Route index element={<DashBoard />} />
-//       <Route path="/products" element={<ProductsPage />}>
-//         <Route path="/products/:id" element={<ProductDetail />} />
-//       </Route>
-
-//       <Route path="/categories" element={<CategoriesPage />} />
-//       <Route path="/brands" element={<BrandsPage />} />
-//       <Route path="/users" element={<UsersPage />} />
-//       <Route path="/settings/materials" element={<Material />} />
-//       <Route path="/settings/colors" element={<Color />} />
-//       <Route path="/settings/sizes" element={<Size />} />
-//     </Route>,
-//   ),
-// );
+const OrdersPage = lazy(() => import('./pages/orders'));
+const OrderDetailPage = lazy(() => import('./pages/order-detail'));
 
 const router = createBrowserRouter([
   {
@@ -62,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: '/users',
         element: <UsersPage />,
+      },
+      {
+        path: '/orders',
+        element: <OrdersPage />,
+      },
+      {
+        path: '/orders/:id',
+        element: <OrderDetailPage />,
       },
       {
         path: '/settings/materials',
