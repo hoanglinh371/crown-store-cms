@@ -9,7 +9,7 @@ const MainLayout = () => {
       <Header />
       <div className="flex flex-1">
         <Sidebar />
-        <main className="flex-1 p-12">
+        <main className="ml-80 flex-1 p-12">
           <Outlet />
         </main>
       </div>

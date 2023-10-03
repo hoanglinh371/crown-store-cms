@@ -12,8 +12,8 @@ const Sidebar = () => {
   };
 
   return (
-    <aside>
-      <div className="h-full w-80 border-r">
+    <aside className="fixed bottom-0 top-20">
+      <div className="h-full w-80 border-r bg-white">
         <CurrentUser {...user} />
         <ul className="menu menu-md">
           {menuItems.map((item) =>
