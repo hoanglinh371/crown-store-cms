@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import MainLayout from './layouts/main-layout';
 import AuthLayout from './layouts/auth-layout';
@@ -17,10 +17,12 @@ const Size = lazy(() => import('./pages/settings/size'));
 const OrdersPage = lazy(() => import('./pages/orders'));
 const OrderDetailPage = lazy(() => import('./pages/order-detail'));
 
+const isAuthenticated = true;
+
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <MainLayout />,
+    element: isAuthenticated ? <MainLayout /> : <Navigate to="/auth/login" />,
     children: [
       {
         index: true,
@@ -70,7 +72,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/auth',
-    element: <AuthLayout />,
+    element: isAuthenticated ? <Navigate to="/" /> : <AuthLayout />,
     children: [
       {
         path: '/auth/login',

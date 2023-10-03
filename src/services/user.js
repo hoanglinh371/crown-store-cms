@@ -1,6 +1,6 @@
 import instance from './axios';
 
-export const getUsers = async () => {
-  const data = await instance.get('/users');
-  return data.data;
+export const getUsers = async (params) => {
+  const response = await instance.get('/users', { params });
+  return response;
 };
