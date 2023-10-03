@@ -1,8 +1,10 @@
-import { lazy } from 'react';
+import { lazy, useContext } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import MainLayout from './layouts/main-layout';
 import AuthLayout from './layouts/auth-layout';
+
+import { UserContext } from './contexts/user.context';
 
 const DashBoard = lazy(() => import('./pages/dashboard'));
 const ProductsPage = lazy(() => import('./pages/products'));
@@ -17,69 +19,71 @@ const Size = lazy(() => import('./pages/settings/size'));
 const OrdersPage = lazy(() => import('./pages/orders'));
 const OrderDetailPage = lazy(() => import('./pages/order-detail'));
 
-const isAuthenticated = true;
+export default function Router() {
+  const { isAuthenticated } = useContext(UserContext);
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: isAuthenticated ? <MainLayout /> : <Navigate to="/auth/login" />,
-    children: [
-      {
-        index: true,
-        element: <DashBoard />,
-      },
-      {
-        path: '/products',
-        element: <ProductsPage />,
-      },
-      {
-        path: '/products/:id',
-        element: <ProductDetail />,
-      },
-      {
-        path: '/categories',
-        element: <CategoriesPage />,
-      },
-      {
-        path: '/brands',
-        element: <BrandsPage />,
-      },
-      {
-        path: '/users',
-        element: <UsersPage />,
-      },
-      {
-        path: '/orders',
-        element: <OrdersPage />,
-      },
-      {
-        path: '/orders/:id',
-        element: <OrderDetailPage />,
-      },
-      {
-        path: '/settings/materials',
-        element: <Material />,
-      },
-      {
-        path: '/settings/colors',
-        element: <Color />,
-      },
-      {
-        path: '/settings/sizes',
-        element: <Size />,
-      },
-    ],
-  },
-  {
-    path: '/auth',
-    element: isAuthenticated ? <Navigate to="/" /> : <AuthLayout />,
-    children: [
-      {
-        path: '/auth/login',
-        element: <LoginPage />,
-      },
-    ],
-  },
-]);
+  console.log(isAuthenticated);
 
-export default router;
+  return createBrowserRouter([
+    {
+      path: '/',
+      element: isAuthenticated ? <MainLayout /> : <Navigate to="/auth/login" />,
+      children: [
+        {
+          index: true,
+          element: <DashBoard />,
+        },
+        {
+          path: '/products',
+          element: <ProductsPage />,
+        },
+        {
+          path: '/products/:id',
+          element: <ProductDetail />,
+        },
+        {
+          path: '/categories',
+          element: <CategoriesPage />,
+        },
+        {
+          path: '/brands',
+          element: <BrandsPage />,
+        },
+        {
+          path: '/users',
+          element: <UsersPage />,
+        },
+        {
+          path: '/orders',
+          element: <OrdersPage />,
+        },
+        {
+          path: '/orders/:id',
+          element: <OrderDetailPage />,
+        },
+        {
+          path: '/settings/materials',
+          element: <Material />,
+        },
+        {
+          path: '/settings/colors',
+          element: <Color />,
+        },
+        {
+          path: '/settings/sizes',
+          element: <Size />,
+        },
+      ],
+    },
+    {
+      path: '/auth',
+      element: isAuthenticated ? <Navigate to="/" /> : <AuthLayout />,
+      children: [
+        {
+          path: '/auth/login',
+          element: <LoginPage />,
+        },
+      ],
+    },
+  ]);
+}

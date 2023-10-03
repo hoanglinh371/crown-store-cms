@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ERROR_MESSAGE } from '@/constants';
+import { UserContext } from '@/contexts/user.context';
 import crownLogo from '/crown.svg';
 
 import Input from '@/components/input';
@@ -21,6 +23,8 @@ const defaultValues = {
 };
 
 export default function Login() {
+  const { setIsAuthenticated } = useContext(UserContext);
+
   const { control, handleSubmit } = useForm({
     defaultValues,
     resolver: yupResolver(schema),
@@ -40,7 +44,13 @@ export default function Login() {
           <Input label="Email Address" name="email" control={control} />
           <Input label="Password" name="password" control={control} />
           <div>
-            <button className="btn btn-block">Login</button>
+            <button
+              type="button"
+              onClick={() => setIsAuthenticated(true)}
+              className="btn btn-block"
+            >
+              Login
+            </button>
           </div>
         </form>
       </div>
