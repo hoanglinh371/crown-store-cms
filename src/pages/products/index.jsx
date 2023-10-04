@@ -16,7 +16,7 @@ const ProductsPage = () => {
     queryKey: ['products', page],
     queryFn: () => getProducts({ page }),
   });
-
+  console.log(data);
   return (
     <div className="flex flex-col gap-12">
       <div className="flex items-center justify-between">
@@ -47,7 +47,11 @@ const ProductsPage = () => {
               {data.data.map((product, index) => (
                 <tr key={index} className="hover">
                   <th>{product.id}</th>
-                  <td>{product.product_name}</td>
+                  <td>
+                    <Link to={`/products/${product.id}`}>
+                      {product.product_name}
+                    </Link>
+                  </td>
                   <td>{product.product_desc}</td>
                   <td>
                     <div className="w-32">
