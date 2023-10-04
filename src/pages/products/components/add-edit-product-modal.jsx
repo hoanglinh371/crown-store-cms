@@ -1,4 +1,3 @@
-import React from 'react';
 import { useId } from 'react';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';

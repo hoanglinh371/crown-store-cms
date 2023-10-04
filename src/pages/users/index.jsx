@@ -17,7 +17,7 @@ const UsersPage = () => {
     queryKey: ['users', { page, search }],
     queryFn: () => getUsers({ page, search }),
   });
-
+  console.log(data);
   return (
     <>
       <div className="mb-12">
