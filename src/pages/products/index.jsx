@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { getProducts } from '@/services';
@@ -7,14 +7,18 @@ import { getProducts } from '@/services';
 import AddEditProductModel from './components/add-edit-product-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Spinner from '@/components/spinner';
+import Pagination from '@/components/pagination';
 
 const ProductsPage = () => {
+  const location = useLocation();
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
+  const search = searchParams.get('search') ?? '';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['products', page],
-    queryFn: () => getProducts({ page }),
+    queryKey: ['products', { page, search }],
+    queryFn: () => getProducts({ page, search }),
   });
 
   return (
@@ -22,7 +26,7 @@ const ProductsPage = () => {
       <div className="flex items-center justify-between">
         <input
           type="text"
-          placeholder="Type here"
+          placeholder="Serch here..."
           className="input input-bordered w-full max-w-xs"
         />
         <AddEditProductModel modalId="add-product-modal" />
@@ -39,8 +43,6 @@ const ProductsPage = () => {
                 <th>Name</th>
                 <th>Description</th>
                 <th>Image</th>
-                <th>Category</th>
-                <th>Brand</th>
                 <th></th>
                 <th></th>
               </tr>
@@ -49,13 +51,21 @@ const ProductsPage = () => {
               {data.data.map((product, index) => (
                 <tr key={index} className="hover">
                   <th>{product.id}</th>
-                  <td>{product.product_name}</td>
-                  <td>{product.product_desc.slice(0, 50)}</td>
                   <td>
-                    <img src={product.product_image} alt="product_image" />
+                    <Link to={`/products/${product.id}`}>
+                      {product.product_name}
+                    </Link>
                   </td>
-                  <td>{product.category_id}</td>
-                  <td>{product.brand_id}</td>
+                  <td>{product.product_desc}</td>
+                  <td>
+                    <div className="w-32">
+                      <img
+                        src={product.product_image}
+                        alt="product_image"
+                        className="h-36 w-full "
+                      />
+                    </div>
+                  </td>
                   <td>
                     <AddEditProductModel
                       modalId={`product-${product.id}`}
@@ -69,19 +79,11 @@ const ProductsPage = () => {
               ))}
             </tbody>
           </table>
-          <div className="join self-center">
-            {Array.from({ length: data.pagination.total_pages }, (_, index) => (
-              <Link
-                key={index}
-                to={`/products?page=${index + 1}`}
-                className={`btn join-item btn-sm ${
-                  data.pagination.current_page === index + 1 ? 'btn-active' : ''
-                }`}
-              >
-                {index + 1}
-              </Link>
-            ))}
-          </div>
+          <Pagination
+            pathname={location.pathname}
+            totalPages={data.pagination.total_pages}
+            currentPage={data.pagination.current_page}
+          />
         </Fragment>
       )}
     </div>
