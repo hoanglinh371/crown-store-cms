@@ -1,6 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
 import { getProductsDetail } from '@/services';
 
@@ -54,7 +54,7 @@ export default function ProductDetail() {
                       <img
                         src={product.product_item_image}
                         alt="product_image"
-                        className="h-36 w-full "
+                        className="h-[100px] w-[75px] object-cover"
                       />
                     </div>
                   </td>

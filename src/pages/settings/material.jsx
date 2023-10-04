@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { getMaterials } from '@/services';
 
@@ -10,9 +10,12 @@ import AddEditMaterialModal from './components/add-edit-material-modal';
 
 export default function Material() {
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') ?? 1;
+
   const { data, isLoading } = useQuery({
-    queryKey: ['materials'],
-    queryFn: () => getMaterials(),
+    queryKey: ['materials', { page }],
+    queryFn: () => getMaterials({ page }),
   });
 
   return (

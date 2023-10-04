@@ -1,13 +1,13 @@
+import { useQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
 import { getProducts } from '@/services';
 
-import AddEditProductModel from './components/add-edit-product-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Spinner from '@/components/spinner';
 import Pagination from '@/components/pagination';
+import Spinner from '@/components/spinner';
+import AddEditProductModel from './components/add-edit-product-modal';
 
 const ProductsPage = () => {
   const location = useLocation();
@@ -26,7 +26,7 @@ const ProductsPage = () => {
       <div className="flex items-center justify-between">
         <input
           type="text"
-          placeholder="Serch here..."
+          placeholder="Search here..."
           className="input input-bordered w-full max-w-xs"
         />
         <AddEditProductModel modalId="add-product-modal" />
@@ -48,7 +48,7 @@ const ProductsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((product, index) => (
+              {data.data.products.map((product, index) => (
                 <tr key={index} className="hover">
                   <th>{product.id}</th>
                   <td>
@@ -58,13 +58,11 @@ const ProductsPage = () => {
                   </td>
                   <td>{product.product_desc}</td>
                   <td>
-                    <div className="w-32">
-                      <img
-                        src={product.product_image}
-                        alt="product_image"
-                        className="h-36 w-full "
-                      />
-                    </div>
+                    <img
+                      src={product.product_image}
+                      alt="product_image"
+                      className="h-[100px] w-[75px] object-cover"
+                    />
                   </td>
                   <td>
                     <AddEditProductModel

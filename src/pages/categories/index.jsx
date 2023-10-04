@@ -56,7 +56,7 @@ const CategoriesPage = () => {
                       <img
                         src={category.category_image}
                         alt="category_image"
-                        className="h-36 max-w-full"
+                        className="h-[100px] w-[75px] object-cover"
                       />
                     </div>
                   </td>
