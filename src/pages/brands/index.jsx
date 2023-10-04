@@ -1,13 +1,13 @@
+import { useQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
 import { getBrands } from '@/services';
 
-import AddEditBrandModal from './components/add-edit-brand-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Spinner from '@/components/spinner';
 import Pagination from '@/components/pagination';
+import Spinner from '@/components/spinner';
+import AddEditBrandModal from './components/add-edit-brand-modal';
 
 const BrandsPage = () => {
   const location = useLocation();
@@ -21,7 +21,7 @@ const BrandsPage = () => {
 
   return (
     <Fragment>
-      <div className="flex items-center justify-between">
+      <div className="mb-12 flex items-center justify-between">
         <input
           type="text"
           placeholder="Type here"
@@ -47,7 +47,7 @@ const BrandsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((brand, index) => (
+              {data.data.brands.map((brand, index) => (
                 <tr key={index} className="hover">
                   <th>{brand.id}</th>
                   <td>{brand.brand_name}</td>

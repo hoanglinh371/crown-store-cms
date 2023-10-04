@@ -1,12 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
 import { Fragment } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
 import { getCategories } from '@/services';
 
-import AddEditCategoryModal from './components/add-edit-categoty-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Spinner from '@/components/spinner';
+import AddEditCategoryModal from './components/add-edit-categoty-modal';
 
 const CategoriesPage = () => {
   const [searchParams] = useSearchParams();
@@ -18,8 +18,8 @@ const CategoriesPage = () => {
   });
 
   return (
-    <div className="flex flex-col gap-12">
-      <div className="flex items-center justify-between">
+    <Fragment>
+      <div className="mb-12 flex items-center justify-between">
         <input
           type="text"
           placeholder="Type here"
@@ -31,7 +31,7 @@ const CategoriesPage = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <Fragment>
+        <div className="flex flex-col items-center space-y-10 overflow-x-auto">
           <table className="table table-zebra table-lg">
             <thead>
               <tr>
@@ -43,7 +43,7 @@ const CategoriesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((category, index) => (
+              {data.data.categories.map((category, index) => (
                 <tr key={index} className="hover">
                   <th>{category.id}</th>
                   <td>{category.category_name}</td>
@@ -81,9 +81,9 @@ const CategoriesPage = () => {
               </Link>
             ))}
           </div>
-        </Fragment>
+        </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 

@@ -1,8 +1,6 @@
 import { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-
-import 'react-toastify/dist/ReactToastify.css';
+import { Toaster } from 'sonner';
 
 import Spinner from './components/spinner';
 
@@ -12,7 +10,7 @@ const App = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <RouterProvider router={router()} />
-      <ToastContainer position="bottom-right" />
+      <Toaster richColors />
     </Suspense>
   );
 };

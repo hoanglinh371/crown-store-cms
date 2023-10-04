@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { getUsers } from '@/services';
 
-import Spinner from '@/components/spinner';
 import Pagination from '@/components/pagination';
+import Spinner from '@/components/spinner';
 
 const UsersPage = () => {
   const location = useLocation();
@@ -46,7 +46,7 @@ const UsersPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((user, index) => (
+              {data.data.users.map((user, index) => (
                 <tr key={index}>
                   <th>{index + 1}</th>
                   <td>{`${user.first_name} ${user.last_name}`}</td>
