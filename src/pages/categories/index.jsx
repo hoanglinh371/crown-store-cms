@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { getCategories } from '@/services';
@@ -7,14 +7,18 @@ import { getCategories } from '@/services';
 import AddEditCategoryModal from './components/add-edit-categoty-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Spinner from '@/components/spinner';
+import Pagination from '@/components/pagination';
 
 const CategoriesPage = () => {
+  const location = useLocation();
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
+  const search = searchParams.get('search') ?? '';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['categories', page],
-    queryFn: () => getCategories({ page }),
+    queryKey: ['categories', { page, search }],
+    queryFn: () => getCategories({ page, search }),
   });
 
   return (
@@ -69,19 +73,11 @@ const CategoriesPage = () => {
               ))}
             </tbody>
           </table>
-          <div className="join self-center">
-            {Array.from({ length: data.pagination.total_pages }, (_, index) => (
-              <Link
-                key={index}
-                to={`/categories?page=${index + 1}`}
-                className={`btn join-item btn-sm ${
-                  data.pagination.current_page === index + 1 ? 'btn-active' : ''
-                }`}
-              >
-                {index + 1}
-              </Link>
-            ))}
-          </div>
+          <Pagination
+            pathname={location.pathname}
+            totalPages={data.pagination.total_pages}
+            currentPage={data.pagination.current_page}
+          />
         </Fragment>
       )}
     </div>

@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { getProducts } from '@/services';
@@ -7,22 +7,26 @@ import { getProducts } from '@/services';
 import AddEditProductModel from './components/add-edit-product-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Spinner from '@/components/spinner';
+import Pagination from '@/components/pagination';
 
 const ProductsPage = () => {
+  const location = useLocation();
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
+  const search = searchParams.get('search') ?? '';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['products', page],
-    queryFn: () => getProducts({ page }),
+    queryKey: ['products', { page, search }],
+    queryFn: () => getProducts({ page, search }),
   });
-  console.log(data);
+
   return (
     <div className="flex flex-col gap-12">
       <div className="flex items-center justify-between">
         <input
           type="text"
-          placeholder="Type here"
+          placeholder="Serch here..."
           className="input input-bordered w-full max-w-xs"
         />
         <AddEditProductModel modalId="add-product-modal" />
@@ -75,19 +79,11 @@ const ProductsPage = () => {
               ))}
             </tbody>
           </table>
-          <div className="join self-center">
-            {Array.from({ length: data.pagination.total_pages }, (_, index) => (
-              <Link
-                key={index}
-                to={`/products?page=${index + 1}`}
-                className={`btn join-item btn-sm ${
-                  data.pagination.current_page === index + 1 ? 'btn-active' : ''
-                }`}
-              >
-                {index + 1}
-              </Link>
-            ))}
-          </div>
+          <Pagination
+            pathname={location.pathname}
+            totalPages={data.pagination.total_pages}
+            currentPage={data.pagination.current_page}
+          />
         </Fragment>
       )}
     </div>
