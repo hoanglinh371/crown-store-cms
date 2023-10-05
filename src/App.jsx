@@ -10,7 +10,7 @@ const App = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <RouterProvider router={router()} />
-      <Toaster richColors />
+      <Toaster richColors position="top-right" />
     </Suspense>
   );
 };

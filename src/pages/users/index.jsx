@@ -17,55 +17,51 @@ const UsersPage = () => {
     queryKey: ['users', { page, search }],
     queryFn: () => getUsers({ page, search }),
   });
-  console.log(data);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
-    <>
-      <div className="mb-12">
-        <form>
-          <input
-            type="search"
-            name="search"
-            placeholder="Search here..."
-            className="input input-bordered w-full max-w-sm"
-          />
-        </form>
-      </div>
+    <div className="space-y-12">
+      <form>
+        <input
+          type="search"
+          name="search"
+          placeholder="Search here..."
+          className="input input-bordered w-full max-w-sm"
+        />
+      </form>
 
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className="flex flex-col items-center space-y-10 overflow-x-auto">
-          <table className="table table-zebra table-lg">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.users.map((user, index) => (
-                <tr key={index}>
-                  <th>{index + 1}</th>
-                  <td>{`${user.first_name} ${user.last_name}`}</td>
-                  <td>{user.email}</td>
-                  <td>{user.phone}</td>
-                  <td>{user.address}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <table className="table table-zebra table-lg">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.data.users.map((user, index) => (
+            <tr key={index}>
+              <th>{index + 1}</th>
+              <td>{`${user.first_name} ${user.last_name}`}</td>
+              <td>{user.email}</td>
+              <td>{user.phone}</td>
+              <td>{user.address}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-          <Pagination
-            pathname={location.pathname}
-            totalPages={data.pagination.total_pages}
-            currentPage={data.pagination.current_page}
-          />
-        </div>
-      )}
-    </>
+      <Pagination
+        pathname={location.pathname}
+        totalPages={data.pagination.total_pages}
+        currentPage={data.pagination.current_page}
+      />
+    </div>
   );
 };
 

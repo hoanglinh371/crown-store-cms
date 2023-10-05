@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // import axios from 'axios';
-import { Toaster, toast } from 'sonner';
 import { getOrdersDetail } from '@/services/order';
+import { toast } from 'sonner';
 
 const OrderDetail = () => {
   const { id } = useParams();
@@ -33,7 +33,6 @@ const OrderDetail = () => {
 
   return (
     <>
-      <Toaster />
       <h1 className=" my-5 flex text-2xl font-bold">
         Thông tin đơn hàng <p className="ml-3">#{order.id}</p>
       </h1>

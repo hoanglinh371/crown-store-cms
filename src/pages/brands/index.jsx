@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Fragment } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { getBrands } from '@/services';
@@ -19,9 +18,13 @@ const BrandsPage = () => {
     queryFn: () => getBrands({ page }),
   });
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
-    <Fragment>
-      <div className="mb-12 flex items-center justify-between">
+    <div className="space-y-12">
+      <div className="flex items-center justify-between">
         <input
           type="text"
           placeholder="Type here"
@@ -30,51 +33,46 @@ const BrandsPage = () => {
         <AddEditBrandModal modalId="add-brand-modal" />
       </div>
 
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div className="flex flex-col items-center space-y-10 overflow-x-auto">
-          <table className="table table-zebra table-lg">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.brands.map((brand, index) => (
-                <tr key={index} className="hover">
-                  <th>{brand.id}</th>
-                  <td>{brand.brand_name}</td>
-                  <td>{brand.brand_email}</td>
-                  <td>{brand.brand_phone}</td>
-                  <td>{brand.brand_address}</td>
-                  <td>
-                    <AddEditBrandModal
-                      modalId={`brand-${brand.id}`}
-                      brand={brand}
-                    />
-                  </td>
-                  <td>
-                    <DeleteModalTrigger modalId="delete-brand-modal" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            pathname={location.pathname}
-            totalPages={data.pagination.total_pages}
-            currentPage={data.pagination.current_page}
-          />
-        </div>
-      )}
-    </Fragment>
+      <table className="table table-zebra table-lg">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.data.brands.map((brand, index) => (
+            <tr key={index} className="hover">
+              <th>{brand.id}</th>
+              <td>{brand.brand_name}</td>
+              <td>{brand.brand_email}</td>
+              <td>{brand.brand_phone}</td>
+              <td>{brand.brand_address}</td>
+              <td>
+                <AddEditBrandModal
+                  modalId={`brand-${brand.id}`}
+                  brand={brand}
+                />
+              </td>
+              <td>
+                <DeleteModalTrigger modalId="delete-brand-modal" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <Pagination
+        pathname={location.pathname}
+        totalPages={data.pagination.total_pages}
+        currentPage={data.pagination.current_page}
+      />
+    </div>
   );
 };
 

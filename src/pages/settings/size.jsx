@@ -18,51 +18,50 @@ export default function Size() {
     queryFn: () => getSizes({ page }),
   });
 
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
-    <div className="flex flex-col gap-12">
-      <div className="self-end">
+    <div className="space-y-12">
+      <div className="text-right">
         <AddEditSizeModal modalId="add-size-modal" />
       </div>
 
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <div>
-          <table className="table table-zebra table-lg">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Width</th>
-                <th>Height</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.data.sizes.map((size, index) => (
-                <tr key={index} className="hover">
-                  <th>{index + 1}</th>
-                  <td>{size.size_value}</td>
-                  <td>{size.width}</td>
-                  <td>{size.height}</td>
-                  <td>
-                    <AddEditSizeModal modalId={`size-${size.id}`} size={size} />
-                  </td>
-                  <td>
-                    <DeleteModalTrigger modalId="delete-size-modal" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            pathname={location.pathname}
-            totalPages={data.pagination.total_pages}
-            currentPage={data.pagination.current_page}
-          />
-        </div>
-      )}
+      <table className="table table-zebra table-lg">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Width</th>
+            <th>Height</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.data.sizes.map((size, index) => (
+            <tr key={index} className="hover">
+              <th>{index + 1}</th>
+              <td>{size.size_value}</td>
+              <td>{size.width}</td>
+              <td>{size.height}</td>
+              <td>
+                <AddEditSizeModal modalId={`size-${size.id}`} size={size} />
+              </td>
+              <td>
+                <DeleteModalTrigger modalId="delete-size-modal" />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <Pagination
+        pathname={location.pathname}
+        totalPages={data.pagination.total_pages}
+        currentPage={data.pagination.current_page}
+      />
     </div>
   );
 }
