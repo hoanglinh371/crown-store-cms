@@ -1,14 +1,16 @@
-import { Fragment } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Fragment } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { getBrands } from '@/services';
 
-import AddEditBrandModal from './components/add-edit-brand-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
+import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import AddEditBrandModal from './components/add-edit-brand-modal';
 
 const BrandsPage = () => {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
 
@@ -18,8 +20,8 @@ const BrandsPage = () => {
   });
 
   return (
-    <div className="flex flex-col gap-12">
-      <div className="flex items-center justify-between">
+    <Fragment>
+      <div className="mb-12 flex items-center justify-between">
         <input
           type="text"
           placeholder="Type here"
@@ -31,7 +33,7 @@ const BrandsPage = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <Fragment>
+        <div className="flex flex-col items-center space-y-10 overflow-x-auto">
           <table className="table table-zebra table-lg">
             <thead>
               <tr>
@@ -45,7 +47,7 @@ const BrandsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((brand, index) => (
+              {data.data.brands.map((brand, index) => (
                 <tr key={index} className="hover">
                   <th>{brand.id}</th>
                   <td>{brand.brand_name}</td>
@@ -65,22 +67,14 @@ const BrandsPage = () => {
               ))}
             </tbody>
           </table>
-          <div className="join self-center">
-            {Array.from({ length: data.pagination.total_pages }, (_, index) => (
-              <Link
-                key={index}
-                to={`/brands?page=${index + 1}`}
-                className={`btn join-item btn-sm ${
-                  data.pagination.current_page === index + 1 ? 'btn-active' : ''
-                }`}
-              >
-                {index + 1}
-              </Link>
-            ))}
-          </div>
-        </Fragment>
+          <Pagination
+            pathname={location.pathname}
+            totalPages={data.pagination.total_pages}
+            currentPage={data.pagination.current_page}
+          />
+        </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 

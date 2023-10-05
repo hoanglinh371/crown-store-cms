@@ -1,48 +1,70 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-import UsersTable from './components/users-table';
-import users from '../../dev-data/users.json';
-import { getUsers } from '../../services/user';
+import { getUsers } from '@/services';
+
+import Pagination from '@/components/pagination';
+import Spinner from '@/components/spinner';
 
 const UsersPage = () => {
-  const [users, setUsers] = useState([]);
+  const location = useLocation();
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const [searchParams] = useSearchParams();
+  const search = searchParams.get('search') ?? '';
+  const page = searchParams.get('page') ?? 1;
 
-  const fetchUsers = async () => {
-    const data = await getUsers();
-    setUsers(data);
-  };
-
+  const { data, isLoading } = useQuery({
+    queryKey: ['users', { page, search }],
+    queryFn: () => getUsers({ page, search }),
+  });
+  console.log(data);
   return (
     <>
-      <div className="mb-12 flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Type here"
-          className="input input-bordered w-full max-w-xs"
-        />
-        <button
-          className="btn"
-          onClick={() => document.getElementById('my_modal_3').showModal()}
-        >
-          open modal
-        </button>
-        <dialog id="my_modal_3" className="modal">
-          <div className="modal-box">
-            <form method="dialog">
-              <button className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2">
-                ✕
-              </button>
-            </form>
-            <h3 className="text-lg font-bold">Hello!</h3>
-            <p className="py-4">Press ESC key or click on ✕ button to close</p>
-          </div>
-        </dialog>
+      <div className="mb-12">
+        <form>
+          <input
+            type="search"
+            name="search"
+            placeholder="Search here..."
+            className="input input-bordered w-full max-w-sm"
+          />
+        </form>
       </div>
-      <UsersTable users={users} />
+
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <div className="flex flex-col items-center space-y-10 overflow-x-auto">
+          <table className="table table-zebra table-lg">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.data.users.map((user, index) => (
+                <tr key={index}>
+                  <th>{index + 1}</th>
+                  <td>{`${user.first_name} ${user.last_name}`}</td>
+                  <td>{user.email}</td>
+                  <td>{user.phone}</td>
+                  <td>{user.address}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <Pagination
+            pathname={location.pathname}
+            totalPages={data.pagination.total_pages}
+            currentPage={data.pagination.current_page}
+          />
+        </div>
+      )}
     </>
   );
 };

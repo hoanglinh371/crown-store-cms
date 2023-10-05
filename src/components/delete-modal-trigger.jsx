@@ -1,6 +1,6 @@
+import { AlertTriangle, Trash } from 'lucide-react';
 import React from 'react';
-import { Trash, AlertTriangle } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const DeleteModalTrigger = ({ modalId, handler }) => {
   const handleDelete = () => {

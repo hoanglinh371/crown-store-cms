@@ -14,3 +14,8 @@ export const updateProduct = async (data, id) => {
   const response = await instance.patch(`/products/${id}`, data);
   return response;
 };
+
+export const getProductsDetail = async (id) => {
+  const response = await instance.get(`/products/${id}`);
+  return response;
+};

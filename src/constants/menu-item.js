@@ -23,7 +23,6 @@ export const menuItems = [
     path: '/orders',
     title: 'Orders',
   },
-
   {
     title: 'Setting',
     children: [

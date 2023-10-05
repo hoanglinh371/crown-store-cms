@@ -1,25 +1,29 @@
-import { Fragment } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Fragment } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 import { getCategories } from '@/services';
 
-import AddEditCategoryModal from './components/add-edit-categoty-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
+import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import AddEditCategoryModal from './components/add-edit-categoty-modal';
 
 const CategoriesPage = () => {
+  const location = useLocation();
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
+  const search = searchParams.get('search') ?? '';
 
   const { data, isLoading } = useQuery({
-    queryKey: ['categories', page],
-    queryFn: () => getCategories({ page }),
+    queryKey: ['categories', { page, search }],
+    queryFn: () => getCategories({ page, search }),
   });
 
   return (
-    <div className="flex flex-col gap-12">
-      <div className="flex items-center justify-between">
+    <Fragment>
+      <div className="mb-12 flex items-center justify-between">
         <input
           type="text"
           placeholder="Type here"
@@ -31,7 +35,7 @@ const CategoriesPage = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <Fragment>
+        <div className="flex flex-col items-center space-y-10 overflow-x-auto">
           <table className="table table-zebra table-lg">
             <thead>
               <tr>
@@ -43,17 +47,18 @@ const CategoriesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((category, index) => (
+              {data.data.categories.map((category, index) => (
                 <tr key={index} className="hover">
                   <th>{category.id}</th>
                   <td>{category.category_name}</td>
                   <td>
-                    <img
-                      src={category.category_image}
-                      alt="category_image"
-                      width={300}
-                      height={300}
-                    />
+                    <div className="w-32">
+                      <img
+                        src={category.category_image}
+                        alt="category_image"
+                        className="h-[100px] w-[75px] object-cover"
+                      />
+                    </div>
                   </td>
                   <td>
                     <AddEditCategoryModal
@@ -68,22 +73,14 @@ const CategoriesPage = () => {
               ))}
             </tbody>
           </table>
-          <div className="join self-center">
-            {Array.from({ length: data.pagination.total_pages }, (_, index) => (
-              <Link
-                key={index}
-                to={`/categories?page=${index + 1}`}
-                className={`btn join-item btn-sm ${
-                  data.pagination.current_page === index + 1 ? 'btn-active' : ''
-                }`}
-              >
-                {index + 1}
-              </Link>
-            ))}
-          </div>
-        </Fragment>
+          <Pagination
+            pathname={location.pathname}
+            totalPages={data.pagination.total_pages}
+            currentPage={data.pagination.current_page}
+          />
+        </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 
