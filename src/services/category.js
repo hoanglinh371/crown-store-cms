@@ -6,7 +6,7 @@ export const getCategories = async (params) => {
 };
 
 export const createCategory = async (data) => {
-  const response = await instance.get('/categories', data);
+  const response = await instance.post('/categories', data);
   return response;
 };
 

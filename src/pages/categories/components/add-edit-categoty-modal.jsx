@@ -29,7 +29,9 @@ const AddEditCategoryModal = ({ modalId, category }) => {
   });
 
   const mutation = useMutation({
-    mutationFn: category ? updateCategory : createCategory,
+    mutationFn: category
+      ? (values) => updateCategory(values, category.id)
+      : createCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast.success('Add category successful.');
