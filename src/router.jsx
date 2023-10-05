@@ -11,6 +11,8 @@ const BrandsPage = lazy(() => import('./pages/brands'));
 const UsersPage = lazy(() => import('./pages/users'));
 const ProductDetail = lazy(() => import('./pages/product-detail'));
 const LoginPage = lazy(() => import('./pages/login'));
+const Orders = lazy(() => import('./pages/orders'));
+const OrderDetail = lazy(() => import('./pages/order-detail'));
 
 const Material = lazy(() => import('./pages/settings/material'));
 const Color = lazy(() => import('./pages/settings/color'));
@@ -74,6 +76,14 @@ const router = createBrowserRouter([
       {
         path: '/settings/sizes',
         element: <Size />,
+      },
+      {
+        path: '/orders',
+        element: <Orders />,
+      },
+      {
+        path: '/orders/:id',
+        element: <OrderDetail />,
       },
     ],
   },

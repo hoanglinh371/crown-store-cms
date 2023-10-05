@@ -20,11 +20,14 @@ const ProductsPage = () => {
   return (
     <div className="flex flex-col gap-12">
       <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Type here"
-          className="input input-bordered w-full max-w-xs"
-        />
+        <form>
+          <input
+            type="search"
+            name="search"
+            placeholder="Type here"
+            className="input input-bordered w-full max-w-xs"
+          />
+        </form>
         <AddEditProductModel modalId="add-product-modal" />
       </div>
 

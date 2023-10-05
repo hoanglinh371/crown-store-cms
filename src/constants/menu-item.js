@@ -20,6 +20,11 @@ export const menuItems = [
     title: 'Users',
   },
   {
+    path: '/orders',
+    title: 'Orders',
+  },
+
+  {
     title: 'Setting',
     children: [
       {
