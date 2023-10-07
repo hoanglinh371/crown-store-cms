@@ -1,15 +1,16 @@
-import { useId } from 'react';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { Pencil, Plus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Pencil, Plus } from 'lucide-react';
+import { useContext, useId } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 import Input from '@/components/input';
-import Textarea from '@/components/textarea';
 import Select from '@/components/select';
+import Textarea from '@/components/textarea';
 
 import { ERROR_MESSAGE } from '@/constants';
+import { ConfigContext } from '@/contexts/config.context';
 import { createProduct, updateProduct } from '@/services';
 
 const schema = yup.object().shape({
@@ -24,13 +25,15 @@ const AddEditProductModel = ({ modalId, product }) => {
   const queryClient = useQueryClient();
   const formId = useId();
 
+  const { configs } = useContext(ConfigContext);
+
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       product_name: product ? product.product_name : '',
       product_desc: product ? product.product_desc : '',
       product_image: product ? product.product_image : '',
-      category_id: product ? product.category_id : 0,
-      brand_id: product ? product.brand_id : 0,
+      category_id: product ? product.category_id : 1,
+      brand_id: product ? product.brand_id : 1,
     },
     resolver: yupResolver(schema),
   });
@@ -46,14 +49,6 @@ const AddEditProductModel = ({ modalId, product }) => {
     mutation.mutate(values);
     document.getElementById(modalId).close();
   };
-
-  const optionBrand = [
-    { value: 1, label: 'Shanahan Inc' },
-    { value: 2, label: 'Schumm-Larkin' },
-    { value: 3, label: 'Spinka Inc' },
-    { value: 4, label: 'Grimes, Lueilwitz and Funk' },
-    { value: 5, label: 'Schaefer Inc' },
-  ];
 
   return (
     <>
@@ -109,15 +104,15 @@ const AddEditProductModel = ({ modalId, product }) => {
             />
             <div className="mb-3 flex gap-4">
               <Select
-                label="Product Categoriy"
+                label="Product Category"
                 name="category_id"
-                options={optionBrand}
+                options={configs.categories}
                 control={control}
               />
               <Select
                 label="Product Brand"
                 name="brand_id"
-                options={optionBrand}
+                options={configs.brands}
                 control={control}
               />
             </div>

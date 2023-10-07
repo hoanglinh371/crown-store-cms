@@ -6,7 +6,7 @@ import { getCategories } from '@/services';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
-import AddEditCategoryModal from './components/add-edit-categoty-modal';
+import AddEditCategoryModal from './components/add-edit-category-modal';
 
 const CategoriesPage = () => {
   const location = useLocation();
