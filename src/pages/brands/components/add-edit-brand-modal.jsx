@@ -1,19 +1,21 @@
-import React from 'react';
-import { useId } from 'react';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { Pencil, Plus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Pencil, Plus } from 'lucide-react';
+import { useId } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 
 import Input from '@/components/input';
-
 import { ERROR_MESSAGE } from '@/constants';
 import { createBrand, updateBrand } from '@/services';
 
 const schema = yup.object().shape({
   brand_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  brand_email: yup.string().required(ERROR_MESSAGE.REQUIRED),
+  brand_email: yup
+    .string()
+    .email(ERROR_MESSAGE.EMAIL)
+    .required(ERROR_MESSAGE.REQUIRED),
   brand_phone: yup.string().required(ERROR_MESSAGE.REQUIRED),
   brand_address: yup.string().required(ERROR_MESSAGE.REQUIRED),
 });
@@ -33,9 +35,10 @@ const AddEditBrandModal = ({ modalId, brand }) => {
   });
 
   const mutation = useMutation({
-    mutationFn: brand ? updateBrand : createBrand,
+    mutationFn: brand ? (values) => updateBrand(values, brand.id) : createBrand,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] });
+      toast.success('Add brand successful.');
     },
   });
 
