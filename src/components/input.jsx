@@ -12,7 +12,11 @@ export default function Input({ type, label, name, control, placeholder }) {
         {...field}
         type={type}
         placeholder={placeholder}
-        className="input input-bordered w-full"
+        className={`w-full ${
+          type === 'file'
+            ? 'file-input file-input-bordered'
+            : 'input input-bordered'
+        }`}
       />
       {fieldState.error && (
         <p className="mt-1 text-sm font-medium italic text-red-500">
