@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { getProductsDetail } from '@/services';
 
+import AddProductDetailModal from './components/add-product-detail-modal';
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Spinner from '@/components/spinner';
 
@@ -26,7 +27,7 @@ export default function ProductDetail() {
           placeholder="Serch here..."
           className="input input-bordered w-full max-w-xs"
         />
-        {/* <AddEditProductModel modalId="add-product-modal" /> */}
+        <AddProductDetailModal modalId="add-product-modal" />
       </div>
 
       <table className="table table-zebra table-lg">

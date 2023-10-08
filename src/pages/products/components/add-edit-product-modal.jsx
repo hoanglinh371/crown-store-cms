@@ -12,6 +12,7 @@ import Textarea from '@/components/textarea';
 import { ERROR_MESSAGE } from '@/constants';
 import { ConfigContext } from '@/contexts/config.context';
 import { createProduct, updateProduct } from '@/services';
+import { toast } from 'sonner';
 
 const schema = yup.object().shape({
   product_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -42,6 +43,10 @@ const AddEditProductModel = ({ modalId, product }) => {
     mutationFn: product ? updateProduct : createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Add product successful.');
+    },
+    onError: () => {
+      toast.error('Somethings went wrong. Please check again!');
     },
   });
 
