@@ -19,3 +19,7 @@ export const getProductsDetail = async (id) => {
   const response = await instance.get(`/products/${id}`);
   return response;
 };
+
+export const createProductDetail = async (id, data) => {
+  const response = await instance.post(`/products/${id}`, data);
+};
