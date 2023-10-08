@@ -16,7 +16,9 @@ export default function Select({ label, options, name, control }) {
           Pick one
         </option>
         {options.map((otp) => (
-          <option key={otp.value}>{otp.label}</option>
+          <option value={otp.id} key={otp.id}>
+            {otp.label}
+          </option>
         ))}
       </select>
       {fieldState.error && (
