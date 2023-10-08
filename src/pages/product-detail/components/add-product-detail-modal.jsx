@@ -79,7 +79,7 @@ const AddProductDetailModal = ({ modalId, item }) => {
               control={control}
             />
             <Input
-              type="file"
+              type="text"
               label="Item Image"
               name="product_item_image"
               control={control}
