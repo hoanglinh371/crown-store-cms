@@ -40,10 +40,14 @@ const AddEditProductModel = ({ modalId, product }) => {
   });
 
   const mutation = useMutation({
-    mutationFn: product ? updateProduct : createProduct,
+    mutationFn: product
+      ? (values) => updateProduct(values, product.id)
+      : createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      toast.success('Add product successful.');
+      toast.success(
+        product ? 'Update product successful.' : 'Add product successful',
+      );
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');
