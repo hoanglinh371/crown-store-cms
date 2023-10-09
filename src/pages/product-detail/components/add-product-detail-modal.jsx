@@ -35,6 +35,7 @@ const AddProductDetailModal = ({ modalId, item }) => {
       size_id: 0,
       material_id: 0,
     },
+    resolver: yupResolver(schema),
   });
   const mutation = useMutation({
     mutationFn: createProductDetail,

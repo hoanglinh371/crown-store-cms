@@ -34,7 +34,9 @@ const AddEditCategoryModal = ({ modalId, category }) => {
       : createCategory,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Add category successful.');
+      toast.success(
+        category ? 'Update category successful.' : 'Add category successful.',
+      );
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');

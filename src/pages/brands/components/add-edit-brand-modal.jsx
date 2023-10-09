@@ -9,7 +9,6 @@ import * as yup from 'yup';
 import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
 import { createBrand, updateBrand } from '@/services';
-import { toast } from 'sonner';
 
 const schema = yup.object().shape({
   brand_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -39,7 +38,9 @@ const AddEditBrandModal = ({ modalId, brand }) => {
     mutationFn: brand ? (values) => updateBrand(values, brand.id) : createBrand,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] });
-      toast.success('Add brand successful.');
+      toast.success(
+        brand ? 'Update brand successful.' : 'Add brand successful.',
+      );
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');
