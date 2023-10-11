@@ -38,7 +38,9 @@ const AddEditBrandModal = ({ modalId, brand }) => {
     mutationFn: brand ? (values) => updateBrand(values, brand.id) : createBrand,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] });
-      toast.success('Add brand successful.');
+      toast.success(
+        brand ? 'Update brand successful.' : 'Add brand successful.',
+      );
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');

@@ -15,6 +15,11 @@ export const updateProduct = async (data, id) => {
   return response;
 };
 
+export const deleteProduct = async (id) => {
+  const response = await instance.delete(`/products/${id}`);
+  return response;
+};
+
 export const getProductsDetail = async (id) => {
   const response = await instance.get(`/products/${id}`);
   return response;
