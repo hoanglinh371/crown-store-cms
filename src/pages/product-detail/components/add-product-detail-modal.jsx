@@ -1,15 +1,18 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import { useId } from 'react';
+import { useContext, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 
 import { ERROR_MESSAGE } from '@/constants';
 import { createProductDetail } from '@/services';
+import { ConfigContext } from '@/contexts/config.context';
 
 import Input from '@/components/input';
+import Select from '@/components/select';
+import { useParams } from 'react-router-dom';
 
 const schema = yup.object().shape({
   sku: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -21,26 +24,28 @@ const schema = yup.object().shape({
   material_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const AddProductDetailModal = ({ modalId, item }) => {
+const AddProductDetailModal = ({ modalId }) => {
   const queryClient = useQueryClient();
   const formId = useId();
+  const { configs } = useContext(ConfigContext);
+  const { id } = useParams();
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       sku: '',
-      qty_in_stock: 0,
+      qty_in_stock: 1,
       product_item_image: '',
       price: 0,
-      color_id: 0,
-      size_id: 0,
-      material_id: 0,
+      color_id: 1,
+      size_id: 1,
+      material_id: 1,
     },
     resolver: yupResolver(schema),
   });
   const mutation = useMutation({
-    mutationFn: createProductDetail,
+    mutationFn: (value) => createProductDetail(id, value),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['product-item'] });
+      queryClient.invalidateQueries({ queryKey: ['products', id] });
       toast.success('Add item successsful');
     },
     onError: () => {
@@ -72,7 +77,7 @@ const AddProductDetailModal = ({ modalId, item }) => {
             className="w-full space-y-4"
             onSubmit={handleSubmit(handleSubmitForm)}
           >
-            <Input type="text" label="Item Sku" name="Sku" control={control} />
+            <Input type="text" label="Item Sku" name="sku" control={control} />
             <Input
               type="number"
               label="Stock"
@@ -86,22 +91,22 @@ const AddProductDetailModal = ({ modalId, item }) => {
               control={control}
             />
             <Input type="number" label="Price" name="price" control={control} />
-            <Input
-              type="number"
+            <Select
               label="Color"
               name="color_id"
+              options={configs.categories}
               control={control}
             />
-            <Input
-              type="number"
-              label="size"
+            <Select
+              label="Size"
               name="size_id"
+              options={configs.sizes}
               control={control}
             />
-            <Input
-              type="number"
+            <Select
               label="Material"
               name="material_id"
+              options={configs.materials}
               control={control}
             />
           </form>
