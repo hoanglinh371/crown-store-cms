@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getCategories } from '@/services';
+import { getCategories, deleteCategory } from '@/services';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
@@ -66,7 +66,11 @@ const CategoriesPage = () => {
                 />
               </td>
               <td>
-                <DeleteModalTrigger modalId="delete-category-modal" />
+                <DeleteModalTrigger
+                  modalId={`delete-category-modal-${category.id}`}
+                  handler={() => deleteCategory(category.id)}
+                  queryKey={['categories']}
+                />
               </td>
             </tr>
           ))}

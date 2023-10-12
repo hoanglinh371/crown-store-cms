@@ -14,3 +14,8 @@ export const updateCategory = async (data, id) => {
   const response = await instance.patch(`/categories/${id}`, data);
   return response;
 };
+
+export const deleteCategory = async (id) => {
+  const response = await instance.delete(`/categories/${id}`);
+  return response;
+};
