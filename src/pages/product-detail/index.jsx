@@ -41,7 +41,6 @@ export default function ProductDetail() {
             <th>Size</th>
             <th>Material</th>
             <th>Price</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -70,9 +69,6 @@ export default function ProductDetail() {
               <td>{product.size.size_value}</td>
               <td>{product.material.material_name}</td>
               <td>${product.price}</td>
-              <td>
-                <DeleteModalTrigger modalId="delete-product-item-modal" />
-              </td>
             </tr>
           ))}
         </tbody>
