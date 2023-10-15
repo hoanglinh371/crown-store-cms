@@ -4,9 +4,12 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { Pencil, Plus } from 'lucide-react';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
 import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
-import { createColor } from '@/services';
+import { createColor, updateColor } from '@/services';
 
 const schema = yup.object().shape({
   color_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -15,6 +18,7 @@ const schema = yup.object().shape({
 
 export default function AddEditColorModal({ modalId, color }) {
   const formId = useId();
+  const queryClient = useQueryClient();
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -24,10 +28,21 @@ export default function AddEditColorModal({ modalId, color }) {
     resolver: yupResolver(schema),
   });
 
+  const mutation = useMutation({
+    mutationFn: color ? (values) => updateColor(values, color.id) : createColor,
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+      toast.success(
+        color ? 'Update color successful.' : 'Add color successful',
+      );
+    },
+    onError: () => {
+      toast.error('Somethings went wrong. Please check again!');
+    },
+  });
+
   const handleSubmitForm = async (values) => {
-    console.log(values);
-    await createColor(values);
-    // reset();
+    mutation.mutate(values);
     document.getElementById(modalId).close();
   };
 

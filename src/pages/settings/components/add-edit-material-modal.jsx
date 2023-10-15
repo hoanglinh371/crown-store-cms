@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { Pencil, Plus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { toast } from 'sonner';
+
 import Input from '@/components/input';
 import Textarea from '@/components/textarea';
 
@@ -29,9 +31,17 @@ export default function AddEditMaterialModal({ modalId, material }) {
   });
 
   const mutation = useMutation({
-    mutationFn: material ? updateMaterial : createMaterial,
+    mutationFn: material
+      ? (values) => updateMaterial(values, material.id)
+      : createMaterial,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
+      toast.success(
+        material ? 'Update material successful.' : 'Add material successful',
+      );
+    },
+    onError: () => {
+      toast.error('Somethings went wrong. Please check again!');
     },
   });
 
