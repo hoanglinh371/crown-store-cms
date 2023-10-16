@@ -25,6 +25,10 @@ export const getProductsDetail = async (id) => {
   return response;
 };
 
-export const createProductDetail = async (id, data) => {
-  const response = await instance.post(`/products/${id}`, data);
+export const createProductDetail = async (productId, data) => {
+  const response = await instance.post(`/product-items`, {
+    product_id: productId,
+    ...data,
+  });
+  return response;
 };

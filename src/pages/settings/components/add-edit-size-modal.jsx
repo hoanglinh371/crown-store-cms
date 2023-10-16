@@ -1,12 +1,15 @@
 import React, { useId } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as yup from 'yup';
 
 import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
+import { createSize, updateSize } from '@/services';
 
 const schema = yup.object().shape({
   size_value: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -15,6 +18,7 @@ const schema = yup.object().shape({
 });
 
 export default function AddEditMaterialModal({ modalId, size }) {
+  const queryClient = useQueryClient();
   const formId = useId();
 
   const { control, handleSubmit, reset } = useForm({
@@ -26,8 +30,19 @@ export default function AddEditMaterialModal({ modalId, size }) {
     resolver: yupResolver(schema),
   });
 
+  const mutation = useMutation({
+    mutationFn: size ? (values) => updateSize(values, size.id) : createSize,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sizes'] });
+      toast.success(size ? 'Update size successful.' : 'Add size successful');
+    },
+    onError: () => {
+      toast.error('Somethings went wrong. Please check again!');
+    },
+  });
+
   const handleSubmitForm = async (values) => {
-    console.log(values);
+    mutation.mutate(values);
     reset();
     document.getElementById(modalId).close();
   };

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
@@ -41,12 +43,11 @@ export default function ProductDetail() {
             <th>Size</th>
             <th>Material</th>
             <th>Price</th>
-            <th />
           </tr>
         </thead>
         <tbody>
-          {data.data.product_items.map((product, index) => (
-            <tr key={index} className="hover">
+          {data.data.product_items.map((product) => (
+            <tr key={product.id} className="hover">
               <th>{product.id}</th>
               <td>{product.sku}</td>
               <td>{product.qty_in_stock}</td>
@@ -69,10 +70,7 @@ export default function ProductDetail() {
               </td>
               <td>{product.size.size_value}</td>
               <td>{product.material.material_name}</td>
-              <td>
-                $
-                {product.price}
-              </td>
+              <td>{`$${product.price}`}</td>
               <td>
                 <DeleteModalTrigger modalId="delete-product-item-modal" />
               </td>

@@ -26,7 +26,6 @@ const schema = yup.object().shape({
 function AddEditProductModel({ modalId, product }) {
   const queryClient = useQueryClient();
   const formId = useId();
-
   const { configs } = useContext(ConfigContext);
 
   const { control, handleSubmit, reset } = useForm({

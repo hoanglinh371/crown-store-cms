@@ -13,7 +13,6 @@ import { createCategory, updateCategory } from '@/services';
 
 const schema = yup.object().shape({
   category_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  category_image: yup.string().required(ERROR_MESSAGE.REQUIRED),
 });
 
 function AddEditCategoryModal({ modalId, category }) {
@@ -23,7 +22,6 @@ function AddEditCategoryModal({ modalId, category }) {
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       category_name: category ? category.category_name : '',
-      category_image: category ? category.category_image : '',
     },
     resolver: yupResolver(schema),
   });
@@ -86,9 +84,9 @@ function AddEditCategoryModal({ modalId, category }) {
               control={control}
             />
             <Input
-              type="text"
+              type="file"
               label="Category Image"
-              name="category_image"
+              name="file"
               control={control}
             />
           </form>

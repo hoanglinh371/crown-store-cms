@@ -1,14 +1,17 @@
-import { useId } from 'react';
+import React, { useId, useContext } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 
 import Input from '@/components/input';
+import Select from '@/components/select';
 import { ERROR_MESSAGE } from '@/constants';
+import { ConfigContext } from '@/contexts/config.context';
 import { createProductDetail } from '@/services';
 
 const schema = yup.object().shape({
@@ -21,26 +24,28 @@ const schema = yup.object().shape({
   material_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
 });
 
-function AddProductDetailModal({ modalId, item }) {
+function AddProductDetailModal({ modalId }) {
   const queryClient = useQueryClient();
   const formId = useId();
+  const { configs } = useContext(ConfigContext);
+  const { id } = useParams();
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       sku: '',
-      qty_in_stock: 0,
+      qty_in_stock: 1,
       product_item_image: '',
       price: 0,
-      color_id: 0,
-      size_id: 0,
-      material_id: 0,
+      color_id: 1,
+      size_id: 1,
+      material_id: 1,
     },
     resolver: yupResolver(schema),
   });
   const mutation = useMutation({
-    mutationFn: createProductDetail,
+    mutationFn: (value) => createProductDetail(id, value),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['product-item'] });
+      queryClient.invalidateQueries({ queryKey: ['products', id] });
       toast.success('Add item successsful');
     },
     onError: () => {
@@ -55,6 +60,7 @@ function AddProductDetailModal({ modalId, item }) {
   return (
     <div>
       <button
+        type="button"
         className="btn btn-primary"
         onClick={() => document.getElementById(modalId).showModal()}
       >
@@ -72,7 +78,7 @@ function AddProductDetailModal({ modalId, item }) {
             className="w-full space-y-4"
             onSubmit={handleSubmit(handleSubmitForm)}
           >
-            <Input type="text" label="Item Sku" name="Sku" control={control} />
+            <Input type="text" label="Item Sku" name="sku" control={control} />
             <Input
               type="number"
               label="Stock"
@@ -86,31 +92,31 @@ function AddProductDetailModal({ modalId, item }) {
               control={control}
             />
             <Input type="number" label="Price" name="price" control={control} />
-            <Input
-              type="number"
+            <Select
               label="Color"
               name="color_id"
+              options={configs.categories}
               control={control}
             />
-            <Input
-              type="number"
-              label="size"
+            <Select
+              label="Size"
               name="size_id"
+              options={configs.sizes}
               control={control}
             />
-            <Input
-              type="number"
+            <Select
               label="Material"
               name="material_id"
+              options={configs.materials}
               control={control}
             />
           </form>
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
+              <button type="button" className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button className="btn" onClick={reset}>
+              <button type="button" className="btn" onClick={reset}>
                 Close
               </button>
             </form>
