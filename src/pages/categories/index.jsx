@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { Table, Space, Skeleton } from 'antd';
+import { Pencil, Trash } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
 import { getCategories, deleteCategory } from '@/services';
 
 import AddEditCategoryModal from './components/add-edit-category-modal';
 
-function CategoriesPage() {
-  const location = useLocation();
+const { Column } = Table;
+
+export default function CategoriesPage() {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
@@ -22,8 +25,13 @@ function CategoriesPage() {
     queryFn: () => getCategories({ page, search }),
   });
 
+  const handleDeleteIconClick = (id) => {
+    setSelectedId(id);
+    setIsDeleteOpen(true);
+  };
+
   if (isLoading) {
-    return <Spinner />;
+    return <Skeleton />;
   }
 
   return (
@@ -37,55 +45,35 @@ function CategoriesPage() {
         <AddEditCategoryModal modalId="add-category-modal" />
       </div>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Image</th>
-            <th> </th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.categories.map((category) => (
-            <tr key={category.id} className="hover">
-              <th>{category.id}</th>
-              <td>{category.category_name}</td>
-              <td>
-                <div className="w-32">
-                  <img
-                    src={category.category_image}
-                    alt="category_image"
-                    className="h-[100px] w-[75px] object-cover"
-                  />
-                </div>
-              </td>
-              <td>
-                <AddEditCategoryModal
-                  modalId={`category-${category.id}`}
-                  category={category}
-                />
-              </td>
-              <td>
-                <DeleteModalTrigger
-                  modalId={`delete-category-modal-${category.id}`}
-                  handler={() => deleteCategory(category.id)}
-                  queryKey={['categories']}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table dataSource={data.data.categories}>
+        <Column title="#" dataIndex="id" />
+        <Column title="Name" dataIndex="category_name" />
+        <Column
+          title="Image"
+          dataIndex="category_image"
+          render={(value) => <img src={value} alt="img" width="75" />}
+        />
+        <Column
+          title="Action"
+          key="action"
+          render={(_, record) => (
+            <Space size="middle">
+              <Pencil size={16} color="green" />
+              <Trash
+                size={16}
+                color="red"
+                onClick={() => handleDeleteIconClick(record.id)}
+              />
+            </Space>
+          )}
+        />
+      </Table>
 
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
+      <DeleteModalTrigger
+        open={isDeleteOpen}
+        onOpenChange={setIsDeleteOpen}
+        handler={() => deleteCategory(selectedId)}
       />
     </div>
   );
 }
-
-export default CategoriesPage;

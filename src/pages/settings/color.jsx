@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { Table, Space, Skeleton } from 'antd';
+import { Pencil, Trash } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
 import { getColors } from '@/services/color';
 
 import AddEditColorModal from './components/add-edit-color-modal';
 
+const { Column } = Table;
+
 export default function Color() {
-  const location = useLocation();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
 
@@ -21,7 +24,7 @@ export default function Color() {
   });
 
   if (isLoading) {
-    return <Spinner />;
+    return <Skeleton />;
   }
 
   return (
@@ -29,49 +32,40 @@ export default function Color() {
       <div className="text-right">
         <AddEditColorModal modalId="add-color-modal" />
       </div>
+      <Table dataSource={data.data.colors}>
+        <Column title="#" dataIndex="id" />
+        <Column title="Name" dataIndex="color_name" />
+        <Column
+          title="Color"
+          dataIndex="color_hex_code"
+          render={(value) => (
+            <div
+              style={{
+                backgroundColor: `${value}`,
+                width: 28,
+                height: 28,
+                borderRadius: 99,
+              }}
+            />
+          )}
+        />
+        <Column
+          title="Action"
+          key="action"
+          render={() => (
+            <Space size="middle">
+              <Pencil size={16} color="green" />
+              <Trash
+                size={16}
+                color="red"
+                onClick={() => setIsDeleteOpen(true)}
+              />
+            </Space>
+          )}
+        />
+      </Table>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Color</th>
-            <th> </th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.colors.map((color) => (
-            <tr key={color.id} className="hover">
-              <th>{color.id}</th>
-              <td>{color.color_name}</td>
-              <td>
-                <div
-                  className="h-6 w-6 rounded-full"
-                  style={{
-                    backgroundColor: color.color_hex_code,
-                  }}
-                />
-              </td>
-              <td>
-                <AddEditColorModal
-                  modalId={`color-${color.id}`}
-                  color={color}
-                />
-              </td>
-              <td>
-                <DeleteModalTrigger modalId="delete-color-modal" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
-      />
+      <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
     </div>
   );
 }

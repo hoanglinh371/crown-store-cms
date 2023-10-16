@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { Table, Space, Skeleton } from 'antd';
+import { Pencil, Trash } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
 import { getMaterials } from '@/services';
 
 import AddEditMaterialModal from './components/add-edit-material-modal';
 
+const { Column } = Table;
+
 export default function Material() {
-  const location = useLocation();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
 
@@ -21,7 +24,7 @@ export default function Material() {
   });
 
   if (isLoading) {
-    return <Spinner />;
+    return <Skeleton />;
   }
 
   return (
@@ -29,42 +32,27 @@ export default function Material() {
       <div className="text-right">
         <AddEditMaterialModal modalId="add-material-modal" />
       </div>
+      <Table dataSource={data.data.materials}>
+        <Column title="#" dataIndex="id" />
+        <Column title="name" dataIndex="material_name" />
+        <Column title="Description" dataIndex="material_desc" />
+        <Column
+          title="Action"
+          key="action"
+          render={() => (
+            <Space size="middle">
+              <Pencil size={16} color="green" />
+              <Trash
+                size={16}
+                color="red"
+                onClick={() => setIsDeleteOpen(true)}
+              />
+            </Space>
+          )}
+        />
+      </Table>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th> </th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.materials.map((material) => (
-            <tr key={material.id} className="hover">
-              <th>{material.id}</th>
-              <td>{material.material_name}</td>
-              <td>{material.material_desc}</td>
-              <td>
-                <AddEditMaterialModal
-                  modalId={`material-${material.id}`}
-                  material={material}
-                />
-              </td>
-              <td>
-                <DeleteModalTrigger modalId="delete-material-modal" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
-      />
+      <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
     </div>
   );
 }

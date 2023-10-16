@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { Menu } from 'antd';
 
 import CurrentUser from './current-user';
 import { menuItems } from '../constants';
@@ -17,28 +17,7 @@ function Sidebar() {
     <aside className="fixed bottom-0 top-20">
       <div className="h-full w-80 border-r bg-white">
         <CurrentUser {...user} />
-        <ul className="menu menu-md">
-          {menuItems.map((item) =>
-            item.children ? (
-              <li key={item.title}>
-                <details open>
-                  <summary>{item.title}</summary>
-                  <ul>
-                    {item.children.map((child) => (
-                      <li key={child.title}>
-                        <NavLink to={child.path}>{child.title}</NavLink>
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              </li>
-            ) : (
-              <li key={item.title}>
-                <NavLink to={item.path}>{item.title}</NavLink>
-              </li>
-            ),
-          )}
-        </ul>
+        <Menu items={menuItems} mode="inline" />
       </div>
     </aside>
   );

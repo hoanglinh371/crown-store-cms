@@ -81,10 +81,10 @@ export default function AddEditColorModal({ modalId, color }) {
           </form>
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button type="button" className="btn btn-primary" form={formId}>
+              <button className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button type="button" className="btn" onClick={reset}>
+              <button className="btn" onClick={reset}>
                 Close
               </button>
             </form>
