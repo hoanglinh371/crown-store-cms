@@ -1,22 +1,22 @@
+import { useId } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus } from 'lucide-react';
-import { useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 
+import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
 import { createCategory, updateCategory } from '@/services';
-
-import Input from '@/components/input';
 
 const schema = yup.object().shape({
   category_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
   category_image: yup.string().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const AddEditCategoryModal = ({ modalId, category }) => {
+function AddEditCategoryModal({ modalId, category }) {
   const queryClient = useQueryClient();
   const formId = useId();
 
@@ -106,6 +106,6 @@ const AddEditCategoryModal = ({ modalId, category }) => {
       </dialog>
     </div>
   );
-};
+}
 
 export default AddEditCategoryModal;

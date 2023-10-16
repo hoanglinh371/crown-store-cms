@@ -5,7 +5,7 @@ const UserContext = React.createContext({
   setIsAuthenticated: () => {},
 });
 
-const UserProvider = ({ children }) => {
+function UserProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
@@ -18,7 +18,7 @@ const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
-};
+}
 
 export default UserProvider;
 export { UserContext };

@@ -1,12 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { getOrders } from '@/services';
-
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getOrders } from '@/services';
 
-const Orders = () => {
+function Orders() {
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
   const navigate = useNavigate();
@@ -63,7 +62,7 @@ const Orders = () => {
       />
     </div>
   );
-};
+}
 
 export default Orders;
 47;

@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+
 import { Pencil } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -9,7 +10,7 @@ export default function EditUserModalTrigger({ modalId, handler }) {
   };
 
   return (
-    <Fragment>
+    <>
       <Pencil
         size={16}
         color="#4bb543"
@@ -23,7 +24,7 @@ export default function EditUserModalTrigger({ modalId, handler }) {
             Press ESC key or click the button below to close
           </p>
           <div className="modal-action">
-            <form method="dialog" className='space-x-3'>
+            <form method="dialog" className="space-x-3">
               <button className="btn btn-success" onClick={handleEdit}>
                 Save
               </button>
@@ -32,6 +33,6 @@ export default function EditUserModalTrigger({ modalId, handler }) {
           </div>
         </div>
       </dialog>
-    </Fragment>
+    </>
   );
 }

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getSizes } from '@/services';
-
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getSizes } from '@/services';
+
 import AddEditSizeModal from './components/add-edit-size-modal';
 
 export default function Size() {
@@ -35,8 +35,8 @@ export default function Size() {
             <th>Name</th>
             <th>Width</th>
             <th>Height</th>
-            <th></th>
-            <th></th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>

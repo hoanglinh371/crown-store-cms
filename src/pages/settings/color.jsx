@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getColors } from '@/services/color';
-
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getColors } from '@/services/color';
+
 import AddEditColorModal from './components/add-edit-color-modal';
 
 export default function Color() {
@@ -34,8 +34,8 @@ export default function Color() {
             <th>#</th>
             <th>Name</th>
             <th>Color</th>
-            <th></th>
-            <th></th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -49,7 +49,7 @@ export default function Color() {
                   style={{
                     backgroundColor: color.color_hex_code,
                   }}
-                ></div>
+                />
               </td>
               <td>
                 <AddEditColorModal

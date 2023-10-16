@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getMaterials } from '@/services';
-
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getMaterials } from '@/services';
+
 import AddEditMaterialModal from './components/add-edit-material-modal';
 
 export default function Material() {
@@ -34,8 +34,8 @@ export default function Material() {
             <th>#</th>
             <th>Name</th>
             <th>Description</th>
-            <th></th>
-            <th></th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>

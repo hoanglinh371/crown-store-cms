@@ -1,6 +1,8 @@
 import { useController } from 'react-hook-form';
 
-export default function Textarea({ label, name, control, placeholder }) {
+export default function Textarea({
+  label, name, control, placeholder,
+}) {
   const { field, fieldState } = useController({
     name,
     control,

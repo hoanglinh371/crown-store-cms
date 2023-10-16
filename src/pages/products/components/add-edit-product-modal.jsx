@@ -1,8 +1,10 @@
+import { useContext, useId } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus } from 'lucide-react';
-import { useContext, useId } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as yup from 'yup';
 
 import Input from '@/components/input';
@@ -12,7 +14,6 @@ import Textarea from '@/components/textarea';
 import { ERROR_MESSAGE } from '@/constants';
 import { ConfigContext } from '@/contexts/config.context';
 import { createProduct, updateProduct } from '@/services';
-import { toast } from 'sonner';
 
 const schema = yup.object().shape({
   product_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -22,7 +23,7 @@ const schema = yup.object().shape({
   brand_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const AddEditProductModel = ({ modalId, product }) => {
+function AddEditProductModel({ modalId, product }) {
   const queryClient = useQueryClient();
   const formId = useId();
 
@@ -141,5 +142,5 @@ const AddEditProductModel = ({ modalId, product }) => {
       </dialog>
     </>
   );
-};
+}
 export default AddEditProductModel;

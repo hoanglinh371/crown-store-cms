@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
-import { getProducts } from '@/services';
-
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getProducts } from '@/services';
+
 import AddEditProductModel from './components/add-edit-product-modal';
 
-const ProductsPage = () => {
+function ProductsPage() {
   const location = useLocation();
 
   const [searchParams] = useSearchParams();
@@ -42,8 +42,8 @@ const ProductsPage = () => {
             <th>Name</th>
             <th>Description</th>
             <th>Image</th>
-            <th></th>
-            <th></th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -84,6 +84,6 @@ const ProductsPage = () => {
       />
     </div>
   );
-};
+}
 
 export default ProductsPage;

@@ -1,12 +1,13 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getUsers } from '@/services';
-
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getUsers } from '@/services';
 
-const UsersPage = () => {
+function UsersPage() {
   const location = useLocation();
 
   const [searchParams] = useSearchParams();
@@ -63,6 +64,6 @@ const UsersPage = () => {
       />
     </div>
   );
-};
+}
 
 export default UsersPage;

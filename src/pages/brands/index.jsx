@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getBrands } from '@/services';
-
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getBrands } from '@/services';
+
 import AddEditBrandModal from './components/add-edit-brand-modal';
 
-const BrandsPage = () => {
+function BrandsPage() {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
@@ -41,8 +41,8 @@ const BrandsPage = () => {
             <th>Email</th>
             <th>Phone</th>
             <th>Address</th>
-            <th></th>
-            <th></th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -74,6 +74,6 @@ const BrandsPage = () => {
       />
     </div>
   );
-};
+}
 
 export default BrandsPage;

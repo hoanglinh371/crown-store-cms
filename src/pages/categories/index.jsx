@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { getCategories, deleteCategory } from '@/services';
-
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getCategories, deleteCategory } from '@/services';
+
 import AddEditCategoryModal from './components/add-edit-category-modal';
 
-const CategoriesPage = () => {
+function CategoriesPage() {
   const location = useLocation();
 
   const [searchParams] = useSearchParams();
@@ -41,8 +41,8 @@ const CategoriesPage = () => {
             <th>#</th>
             <th>Name</th>
             <th>Image</th>
-            <th></th>
-            <th></th>
+            <th />
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -84,6 +84,6 @@ const CategoriesPage = () => {
       />
     </div>
   );
-};
+}
 
 export default CategoriesPage;

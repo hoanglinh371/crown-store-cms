@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../components/header';
 import Sidebar from '../components/sidebar';
 
-const MainLayout = () => {
+function MainLayout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
@@ -15,6 +15,6 @@ const MainLayout = () => {
       </div>
     </div>
   );
-};
+}
 
 export default MainLayout;

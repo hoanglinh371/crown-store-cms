@@ -1,15 +1,15 @@
+import { useId } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import { useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 
+import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
 import { createProductDetail } from '@/services';
-
-import Input from '@/components/input';
 
 const schema = yup.object().shape({
   sku: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -21,7 +21,7 @@ const schema = yup.object().shape({
   material_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const AddProductDetailModal = ({ modalId, item }) => {
+function AddProductDetailModal({ modalId, item }) {
   const queryClient = useQueryClient();
   const formId = useId();
 
@@ -119,6 +119,6 @@ const AddProductDetailModal = ({ modalId, item }) => {
       </dialog>
     </div>
   );
-};
+}
 
 export default AddProductDetailModal;

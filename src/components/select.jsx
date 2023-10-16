@@ -1,6 +1,8 @@
 import { useController } from 'react-hook-form';
 
-export default function Select({ label, options, name, control }) {
+export default function Select({
+  label, options, name, control,
+}) {
   const { field, fieldState } = useController({
     name,
     control,

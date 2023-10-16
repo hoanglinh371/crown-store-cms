@@ -1,7 +1,8 @@
+import { useId } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus } from 'lucide-react';
-import { useId } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as yup from 'yup';
@@ -20,7 +21,7 @@ const schema = yup.object().shape({
   brand_address: yup.string().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const AddEditBrandModal = ({ modalId, brand }) => {
+function AddEditBrandModal({ modalId, brand }) {
   const queryClient = useQueryClient();
   const formId = useId();
 
@@ -122,6 +123,6 @@ const AddEditBrandModal = ({ modalId, brand }) => {
       </dialog>
     </div>
   );
-};
+}
 
 export default AddEditBrandModal;

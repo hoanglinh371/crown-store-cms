@@ -1,10 +1,10 @@
 import { lazy, useContext } from 'react';
+
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
-import MainLayout from './layouts/main-layout';
-import AuthLayout from './layouts/auth-layout';
-
 import { UserContext } from './contexts/user.context';
+import AuthLayout from './layouts/auth-layout';
+import MainLayout from './layouts/main-layout';
 
 const DashBoard = lazy(() => import('./pages/dashboard'));
 const ProductsPage = lazy(() => import('./pages/products'));

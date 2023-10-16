@@ -1,9 +1,10 @@
 import React from 'react';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle, Trash } from 'lucide-react';
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const DeleteModalTrigger = ({ modalId, handler, queryKey }) => {
+function DeleteModalTrigger({ modalId, handler, queryKey }) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -18,7 +19,7 @@ const DeleteModalTrigger = ({ modalId, handler, queryKey }) => {
   });
 
   return (
-    <React.Fragment>
+    <>
       <Trash
         size={16}
         color="#d11a2a"
@@ -38,16 +39,22 @@ const DeleteModalTrigger = ({ modalId, handler, queryKey }) => {
           </p>
           <div className="modal-action">
             <form method="dialog" className="space-x-3">
-              <button className="btn btn-warning" onClick={mutation.mutate}>
+              <button
+                type="button"
+                className="btn btn-warning"
+                onClick={mutation.mutate}
+              >
                 Delete
               </button>
-              <button className="btn">Cancel</button>
+              <button type="button" className="btn">
+                Cancel
+              </button>
             </form>
           </div>
         </div>
       </dialog>
-    </React.Fragment>
+    </>
   );
-};
+}
 
 export default DeleteModalTrigger;
