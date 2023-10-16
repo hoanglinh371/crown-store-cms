@@ -4,9 +4,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
-
 import { toast } from 'sonner';
+import * as yup from 'yup';
 
 import Input from '@/components/input';
 import Textarea from '@/components/textarea';
@@ -62,6 +61,7 @@ export default function AddEditMaterialModal({ modalId, material }) {
         />
       ) : (
         <button
+          type="button"
           className="btn btn-primary"
           onClick={() => document.getElementById(modalId).showModal()}
         >
@@ -97,10 +97,10 @@ export default function AddEditMaterialModal({ modalId, material }) {
           </form>
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
+              <button type="button" className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button className="btn" onClick={reset}>
+              <button type="button" className="btn" onClick={reset}>
                 Close
               </button>
             </form>

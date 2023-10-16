@@ -46,7 +46,7 @@ function UsersPage() {
         </thead>
         <tbody>
           {data.data.users.map((user, index) => (
-            <tr key={index}>
+            <tr key={user.id}>
               <th>{index + 1}</th>
               <td>{`${user.first_name} ${user.last_name}`}</td>
               <td>{user.email}</td>

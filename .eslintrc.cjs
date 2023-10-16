@@ -8,6 +8,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:import/recommended',
     'airbnb',
+    'prettier',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.js'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -32,6 +33,9 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'react/prop-types': 'off',
+    'object-curly-newline': 'off',
+    'no-confusing-arrow': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'react-refresh/only-export-components': 'off',
     'import/order': [
       'error',

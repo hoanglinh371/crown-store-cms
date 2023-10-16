@@ -1,4 +1,4 @@
-import { lazy, useContext } from 'react';
+import React, { lazy, useContext } from 'react';
 
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
@@ -22,8 +22,6 @@ const Size = lazy(() => import('./pages/settings/size'));
 
 export default function Router() {
   const { isAuthenticated } = useContext(UserContext);
-
-  console.log(isAuthenticated);
 
   return createBrowserRouter([
     {

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -41,13 +43,13 @@ function BrandsPage() {
             <th>Email</th>
             <th>Phone</th>
             <th>Address</th>
-            <th />
-            <th />
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
-          {data.data.brands.map((brand, index) => (
-            <tr key={index} className="hover">
+          {data.data.brands.map((brand) => (
+            <tr key={brand.id} className="hover">
               <th>{brand.id}</th>
               <td>{brand.brand_name}</td>
               <td>{brand.brand_email}</td>

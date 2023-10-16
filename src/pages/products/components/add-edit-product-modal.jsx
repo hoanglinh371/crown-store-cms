@@ -1,4 +1,4 @@
-import { useContext, useId } from 'react';
+import React, { useContext, useId } from 'react';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -70,6 +70,7 @@ function AddEditProductModel({ modalId, product }) {
         />
       ) : (
         <button
+          type="button"
           className="btn btn-primary"
           onClick={() => document.getElementById(modalId).showModal()}
         >
@@ -129,10 +130,10 @@ function AddEditProductModel({ modalId, product }) {
 
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
+              <button type="button" className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button className="btn" onClick={reset}>
+              <button type="button" className="btn" onClick={reset}>
                 Close
               </button>
             </form>

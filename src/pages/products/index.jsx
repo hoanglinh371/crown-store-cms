@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 
@@ -42,13 +44,13 @@ function ProductsPage() {
             <th>Name</th>
             <th>Description</th>
             <th>Image</th>
-            <th />
-            <th />
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
-          {data.data.products.map((product, index) => (
-            <tr key={index} className="hover">
+          {data.data.products.map((product) => (
+            <tr key={product.id} className="hover">
               <th>{product.id}</th>
               <td>
                 <Link to={`/products/${product.id}`}>

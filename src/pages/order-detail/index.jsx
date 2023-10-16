@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
-
-// import axios from 'axios';
 import { toast } from 'sonner';
 
 import { getOrdersDetail } from '@/services/order';
@@ -16,7 +14,6 @@ function OrderDetail() {
     const fetchData = async () => {
       const response = await getOrdersDetail(id);
       setOrder(response.data);
-      console.log(response.data);
 
       const orders = response.data.order_lines.map((orderLine) => ({
         productName: orderLine.product_item.product.product_name,
@@ -35,12 +32,7 @@ function OrderDetail() {
   return (
     <>
       <h1 className=" my-5 flex text-2xl font-bold">
-        Thông tin đơn hàng
-        {' '}
-        <p className="ml-3">
-          #
-          {order.id}
-        </p>
+        Thông tin đơn hàng <p className="ml-3">#{order.id}</p>
       </h1>
 
       <p>
@@ -48,10 +40,7 @@ function OrderDetail() {
         {order.order_date}
       </p>
       <p>
-        Tên người nhận:
-        {' '}
-        {order.user && order.user.first_name}
-        {' '}
+        Tên người nhận: {order.user && order.user.first_name}{' '}
         {order.user && order.user.last_name}
       </p>
       <p>
@@ -78,12 +67,11 @@ function OrderDetail() {
           </tr>
         </thead>
         <tbody>
-          {orderData.map((order, index) => (
-            <tr key={index}>
+          {orderData.map((_order) => (
+            <tr key={_order.id}>
               <td className="border px-4 py-2">
                 <div className="flex items-center ">
                   <img src={order.image} alt="" className="mr-9 w-16" />
-                  {' '}
                   {order.productName}
                 </div>
               </td>
@@ -97,35 +85,34 @@ function OrderDetail() {
               </td>
               <td className="border px-4 py-2 text-center">{order.qty}</td>
               <td className="border px-4 py-2 text-center">
-                $
-                {order.price.toFixed(2)}
+                ${order.price.toFixed(2)}
               </td>
               <td className="border px-4 py-2 text-center">{order.size}</td>
               <td className="border px-4 py-2 text-center">
-                $
-                {order.total.toFixed(2)}
+                ${order.total.toFixed(2)}
               </td>
             </tr>
           ))}
         </tbody>
-        <th />
-        <th />
-        <th />
-        <th />
-        <th />
+        <th> </th>
+        <th> </th>
+        <th> </th>
+        <th> </th>
+        <th> </th>
         <th className=" border px-4 py-2">
-          Tổng thanh toán: $
-          {order.order_total}
+          Tổng thanh toán: ${order.order_total}
         </th>
       </table>
       <div className="mr-16 mt-10 text-right">
         <button
+          type="button"
           className="btn btn-accent btn-active mr-5"
           onClick={() => toast.success('Success')}
         >
           Order
         </button>
         <button
+          type="button"
           className="btn btn-accent btn-active"
           onClick={() => toast.error('Fail')}
         >

@@ -1,12 +1,12 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import { UserContext } from '@/contexts/user.context';
 
-import crownLogo from '../../../../../../crown.svg';
+import crownLogo from '../../public/crown.svg';
 
-function Header() {
+export default function Header() {
   const { setIsAuthenticated } = useContext(UserContext);
 
   return (
@@ -18,16 +18,15 @@ function Header() {
           </Link>
         </div>
         <div>
-          <p
+          <button
+            type="button"
             onClick={() => setIsAuthenticated(false)}
             className="cursor-pointer"
           >
             LOGOUT
-          </p>
+          </button>
         </div>
       </div>
     </header>
   );
 }
-
-export default Header;

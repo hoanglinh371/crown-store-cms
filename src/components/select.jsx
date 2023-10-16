@@ -1,8 +1,9 @@
+import React, { useId } from 'react';
+
 import { useController } from 'react-hook-form';
 
-export default function Select({
-  label, options, name, control,
-}) {
+export default function Select({ label, options, name, control }) {
+  const id = useId();
   const { field, fieldState } = useController({
     name,
     control,
@@ -10,10 +11,10 @@ export default function Select({
 
   return (
     <div className="form-control w-full max-w-xs">
-      <label className="label">
+      <label className="label" htmlFor={id}>
         <span className="label-text">{label}</span>
       </label>
-      <select {...field} className="select select-bordered">
+      <select {...field} id={id} className="select select-bordered">
         <option disabled selected>
           Pick one
         </option>

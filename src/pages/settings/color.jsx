@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -34,14 +36,14 @@ export default function Color() {
             <th>#</th>
             <th>Name</th>
             <th>Color</th>
-            <th />
-            <th />
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
-          {data.data.colors.map((color, index) => (
-            <tr key={index} className="hover">
-              <th>{index + 1}</th>
+          {data.data.colors.map((color) => (
+            <tr key={color.id} className="hover">
+              <th>{color.id}</th>
               <td>{color.color_name}</td>
               <td>
                 <div

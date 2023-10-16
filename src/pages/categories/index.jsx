@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -41,13 +43,13 @@ function CategoriesPage() {
             <th>#</th>
             <th>Name</th>
             <th>Image</th>
-            <th />
-            <th />
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
-          {data.data.categories.map((category, index) => (
-            <tr key={index} className="hover">
+          {data.data.categories.map((category) => (
+            <tr key={category.id} className="hover">
               <th>{category.id}</th>
               <td>{category.category_name}</td>
               <td>

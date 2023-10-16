@@ -1,8 +1,9 @@
+import React, { useId } from 'react';
+
 import { useController } from 'react-hook-form';
 
-export default function Textarea({
-  label, name, control, placeholder,
-}) {
+export default function Textarea({ label, name, control, placeholder }) {
+  const id = useId();
   const { field, fieldState } = useController({
     name,
     control,
@@ -10,10 +11,11 @@ export default function Textarea({
 
   return (
     <div className="form-control">
-      <label className="label">
+      <label className="label" htmlFor={id}>
         <span className="label-text">{label}</span>
       </label>
       <textarea
+        id={id}
         {...field}
         className="textarea textarea-bordered h-24"
         placeholder={placeholder}

@@ -1,11 +1,11 @@
-import { Fragment } from 'react';
+import React from 'react';
 
 import { Pencil } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 export default function EditUserModalTrigger({ modalId, handler }) {
   const handleEdit = () => {
-    // handler();
+    handler();
     toast.success('Update successful');
   };
 
@@ -25,10 +25,16 @@ export default function EditUserModalTrigger({ modalId, handler }) {
           </p>
           <div className="modal-action">
             <form method="dialog" className="space-x-3">
-              <button className="btn btn-success" onClick={handleEdit}>
+              <button
+                type="button"
+                className="btn btn-success"
+                onClick={handleEdit}
+              >
                 Save
               </button>
-              <button className="btn">Close</button>
+              <button type="button" className="btn">
+                Close
+              </button>
             </form>
           </div>
         </div>

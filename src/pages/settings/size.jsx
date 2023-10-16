@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -35,13 +37,13 @@ export default function Size() {
             <th>Name</th>
             <th>Width</th>
             <th>Height</th>
-            <th />
-            <th />
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
           {data.data.sizes.map((size, index) => (
-            <tr key={index} className="hover">
+            <tr key={size.id} className="hover">
               <th>{index + 1}</th>
               <td>{size.size_value}</td>
               <td>{size.width}</td>

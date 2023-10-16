@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
@@ -34,13 +36,13 @@ export default function Material() {
             <th>#</th>
             <th>Name</th>
             <th>Description</th>
-            <th />
-            <th />
+            <th> </th>
+            <th> </th>
           </tr>
         </thead>
         <tbody>
-          {data.data.materials.map((material, index) => (
-            <tr key={index} className="hover">
+          {data.data.materials.map((material) => (
+            <tr key={material.id} className="hover">
               <th>{material.id}</th>
               <td>{material.material_name}</td>
               <td>{material.material_desc}</td>
