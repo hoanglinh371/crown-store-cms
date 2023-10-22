@@ -51,7 +51,7 @@ const CategoriesPage = () => {
               <th>{category.id}</th>
               <td>{category.category_name}</td>
               <td>
-                <div className="w-32">
+                <div>
                   <img
                     src={category.category_image}
                     alt="category_image"
