@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { StyleProvider } from '@ant-design/cssinjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import ReactDOM from 'react-dom/client';
@@ -17,7 +18,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <ConfigProvider>
         <UserProvider>
-          <App />
+          <StyleProvider hashPriority="high">
+            <App />
+          </StyleProvider>
         </UserProvider>
       </ConfigProvider>
       <ReactQueryDevtools />

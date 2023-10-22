@@ -1,91 +1,137 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Table, Card, Divider, Button, Input, Flex, Popconfirm } from 'antd';
+import { Link } from 'react-router-dom';
 
-import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
-import { getProducts } from '@/services';
+import { toast } from 'sonner';
+
+import { deleteProduct, getProducts } from '@/services';
 
 import AddEditProductModel from './components/add-edit-product-modal';
 
-function ProductsPage() {
-  const location = useLocation();
+export default function ProductsPage() {
+  const queryClient = useQueryClient();
 
-  const [searchParams] = useSearchParams();
-  const page = searchParams.get('page') ?? 1;
-  const search = searchParams.get('search') ?? '';
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['products', { page, search }],
-    queryFn: () => getProducts({ page, search }),
+  const [selectedProduct, setSelectedProduct] = useState();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [queryObj, setQueryObj] = useState({
+    page: 1,
+    search: '',
   });
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  const { data, isLoading } = useQuery({
+    queryKey: ['products', queryObj],
+    queryFn: () => getProducts(queryObj),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: () => deleteProduct(selectedProduct.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['products']);
+      toast.success('Deleted product!');
+    },
+  });
+
+  const onSearch = (search) => {
+    setQueryObj({
+      ...queryObj,
+      search,
+    });
+  };
+
+  const onChange = (page) => {
+    setQueryObj({
+      ...queryObj,
+      page,
+    });
+  };
+
+  const onCancel = () => {
+    setSelectedProduct(undefined);
+    setIsFormOpen(false);
+  };
+
+  const onConfirm = () => {
+    mutate();
+  };
+
+  const columns = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'product_name',
+      render: (_, record) => (
+        <Link to={`/products/${record.id}`}>{record.product_name}</Link>
+      ),
+    },
+    {
+      key: 'description',
+      title: 'Description',
+      dataIndex: 'product_desc',
+    },
+    {
+      key: 'image',
+      title: 'image',
+      dataIndex: 'product_image',
+      render: (value) => <img src={value} alt="img" width={192} />,
+    },
+    {
+      key: 'action',
+      title: 'Action',
+      render: (_, record) => (
+        <span>
+          <EditOutlined
+            onClick={() => {
+              setSelectedProduct(record);
+              setIsFormOpen(true);
+            }}
+          />
+          <Divider type="vertical" />
+          <Popconfirm
+            title="Delete product"
+            description="Are you sure to delete this product?"
+            onConfirm={onConfirm}
+          >
+            <DeleteOutlined onClick={() => setSelectedProduct(record)} />
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Search here..."
-          className="input input-bordered w-full max-w-xs"
+    <Flex vertical gap="large">
+      <Card>
+        <Input.Search onSearch={onSearch} placeholder="Search here..." />
+      </Card>
+
+      <Card
+        title={<span>Products</span>}
+        extra={
+          <Button type="primary" onClick={() => setIsFormOpen(true)}>
+            Add Product
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          loading={isLoading}
+          pagination={{
+            total: data?.metadata.total,
+            pageSize: data?.metadata.per_page,
+            onChange,
+          }}
         />
-        <AddEditProductModel modalId="add-product-modal" />
-      </div>
+      </Card>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Image</th>
-            <th> </th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.products.map((product) => (
-            <tr key={product.id} className="hover">
-              <th>{product.id}</th>
-              <td>
-                <Link to={`/products/${product.id}`}>
-                  {product.product_name}
-                </Link>
-              </td>
-              <td>{product.product_desc}</td>
-              <td>
-                <img
-                  src={product.product_image}
-                  alt="product_image"
-                  className="h-[100px] w-[75px] object-cover"
-                />
-              </td>
-              <td>
-                <AddEditProductModel
-                  modalId={`product-${product.id}`}
-                  product={product}
-                />
-              </td>
-              <td>
-                <DeleteModalTrigger modalId="delete-product-modal" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
+      <AddEditProductModel
+        open={isFormOpen}
+        product={selectedProduct}
+        onCancel={onCancel}
       />
-    </div>
+    </Flex>
   );
 }
-
-export default ProductsPage;

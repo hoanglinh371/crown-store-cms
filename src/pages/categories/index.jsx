@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Table, Space, Skeleton } from 'antd';
-import { Pencil, Trash } from 'lucide-react';
+import { Table, Space, Divider, Card, Button } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import { getCategories, deleteCategory } from '@/services';
 
 import AddEditCategoryModal from './components/add-edit-category-modal';
-
-const { Column } = Table;
 
 export default function CategoriesPage() {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -30,44 +28,43 @@ export default function CategoriesPage() {
     setIsDeleteOpen(true);
   };
 
-  if (isLoading) {
-    return <Skeleton />;
-  }
+  const columns = [
+    {
+      title: 'Name',
+      key: 'name',
+      dataIndex: 'category_name',
+    },
+    {
+      title: 'Image',
+      key: 'image',
+      dataIndex: 'category_image',
+      render: (value) => <img src={value} alt="img" width={192} />,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="small">
+          <EditOutlined />
+          <Divider type="vertical" />
+          <DeleteOutlined onClick={() => handleDeleteIconClick(record.id)} />
+        </Space>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Type here"
-          className="input input-bordered w-full max-w-xs"
+    <div>
+      <Card
+        title="Category"
+        extra={<Button type="primary">Add Category</Button>}
+      >
+        <Table
+          columns={columns}
+          loading={isLoading}
+          dataSource={data?.data.categories}
         />
-        <AddEditCategoryModal modalId="add-category-modal" />
-      </div>
-
-      <Table dataSource={data.data.categories}>
-        <Column title="#" dataIndex="id" />
-        <Column title="Name" dataIndex="category_name" />
-        <Column
-          title="Image"
-          dataIndex="category_image"
-          render={(value) => <img src={value} alt="img" width="75" />}
-        />
-        <Column
-          title="Action"
-          key="action"
-          render={(_, record) => (
-            <Space size="middle">
-              <Pencil size={16} color="green" />
-              <Trash
-                size={16}
-                color="red"
-                onClick={() => handleDeleteIconClick(record.id)}
-              />
-            </Space>
-          )}
-        />
-      </Table>
+      </Card>
 
       <DeleteModalTrigger
         open={isDeleteOpen}
