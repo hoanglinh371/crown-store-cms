@@ -1,17 +1,19 @@
+import React from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
+import DeleteModalTrigger from '@/components/delete-modal-trigger';
+import Spinner from '@/components/spinner';
 import { getProductsDetail } from '@/services';
 
 import AddProductDetailModal from './components/add-product-detail-modal';
-import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Spinner from '@/components/spinner';
 
 export default function ProductDetail() {
   const { id } = useParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: [`products`, id],
+    queryKey: ['products', id],
     queryFn: () => getProductsDetail(id),
   });
 
@@ -44,8 +46,8 @@ export default function ProductDetail() {
           </tr>
         </thead>
         <tbody>
-          {data.data.product_items.map((product, index) => (
-            <tr key={index} className="hover">
+          {data.data.product_items.map((product) => (
+            <tr key={product.id} className="hover">
               <th>{product.id}</th>
               <td>{product.sku}</td>
               <td>{product.qty_in_stock}</td>
@@ -64,11 +66,14 @@ export default function ProductDetail() {
                   style={{
                     backgroundColor: product.color.color_hex_code,
                   }}
-                ></div>
+                />
               </td>
               <td>{product.size.size_value}</td>
               <td>{product.material.material_name}</td>
-              <td>${product.price}</td>
+              <td>{`$${product.price}`}</td>
+              <td>
+                <DeleteModalTrigger modalId="delete-product-item-modal" />
+              </td>
             </tr>
           ))}
         </tbody>

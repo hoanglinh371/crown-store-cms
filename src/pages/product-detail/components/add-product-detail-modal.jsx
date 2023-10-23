@@ -1,18 +1,18 @@
+import React, { useId, useContext } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import { useContext, useId } from 'react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import * as yup from 'yup';
 
-import { ERROR_MESSAGE } from '@/constants';
-import { createProductDetail } from '@/services';
-import { ConfigContext } from '@/contexts/config.context';
-
 import Input from '@/components/input';
 import Select from '@/components/select';
-import { useParams } from 'react-router-dom';
+import { ERROR_MESSAGE } from '@/constants';
+import { ConfigContext } from '@/contexts/config.context';
+import { createProductDetail } from '@/services';
 
 const schema = yup.object().shape({
   sku: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -24,7 +24,7 @@ const schema = yup.object().shape({
   material_id: yup.number().required(ERROR_MESSAGE.REQUIRED),
 });
 
-const AddProductDetailModal = ({ modalId }) => {
+function AddProductDetailModal({ modalId }) {
   const queryClient = useQueryClient();
   const formId = useId();
   const { configs } = useContext(ConfigContext);
@@ -60,6 +60,7 @@ const AddProductDetailModal = ({ modalId }) => {
   return (
     <div>
       <button
+        type="button"
         className="btn btn-primary"
         onClick={() => document.getElementById(modalId).showModal()}
       >
@@ -112,10 +113,10 @@ const AddProductDetailModal = ({ modalId }) => {
           </form>
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
+              <button type="button" className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button className="btn" onClick={reset}>
+              <button type="button" className="btn" onClick={reset}>
                 Close
               </button>
             </form>
@@ -124,6 +125,6 @@ const AddProductDetailModal = ({ modalId }) => {
       </dialog>
     </div>
   );
-};
+}
 
 export default AddProductDetailModal;

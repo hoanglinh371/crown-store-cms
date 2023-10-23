@@ -1,25 +1,30 @@
-import { useQuery } from '@tanstack/react-query';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
 
-import { getBrands } from '@/services';
+import { useQuery } from '@tanstack/react-query';
+import { Space, Table, Skeleton } from 'antd';
+import { Pencil, Trash } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
+import { getBrands } from '@/services';
+
 import AddEditBrandModal from './components/add-edit-brand-modal';
 
-const BrandsPage = () => {
-  const location = useLocation();
+const { Column } = Table;
+
+export default function BrandsPage() {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
 
   const { data, isLoading } = useQuery({
-    queryKey: ['brands', page],
+    queryKey: ['brands', { page }],
     queryFn: () => getBrands({ page }),
   });
 
   if (isLoading) {
-    return <Spinner />;
+    return <Skeleton />;
   }
 
   return (
@@ -32,48 +37,29 @@ const BrandsPage = () => {
         />
         <AddEditBrandModal modalId="add-brand-modal" />
       </div>
+      <Table dataSource={data.data.brands} pagination={{}}>
+        <Column title="#" dataIndex="id" />
+        <Column title="Name" dataIndex="brand_name" />
+        <Column title="Email" dataIndex="brand_email" />
+        <Column title="Phone" dataIndex="brand_phone" />
+        <Column title="Address" dataIndex="brand_address" />
+        <Column
+          title="Action"
+          key="action"
+          render={() => (
+            <Space size="middle">
+              <Pencil size={16} color="green" />
+              <Trash
+                size={16}
+                color="red"
+                onClick={() => setIsDeleteOpen(true)}
+              />
+            </Space>
+          )}
+        />
+      </Table>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Address</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.brands.map((brand, index) => (
-            <tr key={index} className="hover">
-              <th>{brand.id}</th>
-              <td>{brand.brand_name}</td>
-              <td>{brand.brand_email}</td>
-              <td>{brand.brand_phone}</td>
-              <td>{brand.brand_address}</td>
-              <td>
-                <AddEditBrandModal
-                  modalId={`brand-${brand.id}`}
-                  brand={brand}
-                />
-              </td>
-              <td>
-                <DeleteModalTrigger modalId="delete-brand-modal" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
-      />
+      <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
     </div>
   );
-};
-
-export default BrandsPage;
+}

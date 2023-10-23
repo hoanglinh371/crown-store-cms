@@ -1,13 +1,14 @@
-import { useContext } from 'react';
-import * as yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import React, { useContext } from 'react';
 
-import { ERROR_MESSAGE } from '@/constants';
-import { UserContext } from '@/contexts/user.context';
-import crownLogo from '/crown.svg';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 import Input from '@/components/input';
+import { ERROR_MESSAGE } from '@/constants';
+import { UserContext } from '@/contexts/user.context';
+
+import crownLogo from '../../../public/crown.svg';
 
 const schema = yup.object().shape({
   email: yup
@@ -30,9 +31,7 @@ export default function Login() {
     resolver: yupResolver(schema),
   });
 
-  const handleSubmitForm = (values) => {
-    console.log(values);
-  };
+  const handleSubmitForm = (values) => {};
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden">

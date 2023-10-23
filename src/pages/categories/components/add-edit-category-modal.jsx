@@ -1,109 +1,106 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Pencil, Plus } from 'lucide-react';
-import { useId } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+
+import { UploadOutlined } from '@ant-design/icons';
+import { useMutation } from '@tanstack/react-query';
+import { Form, Upload, Modal, Input, Button } from 'antd';
 import { toast } from 'sonner';
-import * as yup from 'yup';
 
-import { ERROR_MESSAGE } from '@/constants';
 import { createCategory, updateCategory } from '@/services';
+import { getBase64 } from '@/utils';
 
-import Input from '@/components/input';
+function AddEditCategoryModal({ open, category, refetch, onCancel }) {
+  const [form] = Form.useForm();
 
-const schema = yup.object().shape({
-  category_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-});
+  const [fileList, setFileList] = useState([]);
 
-const AddEditCategoryModal = ({ modalId, category }) => {
-  const queryClient = useQueryClient();
-  const formId = useId();
-
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      category_name: category ? category.category_name : '',
-    },
-    resolver: yupResolver(schema),
-  });
-
-  const mutation = useMutation({
+  const { mutate } = useMutation({
     mutationFn: category
       ? (values) => updateCategory(values, category.id)
       : createCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success(
-        category ? 'Update category successful.' : 'Add category successful.',
-      );
+      refetch();
+      onCancel();
+      toast.success(category ? 'Category updated!' : 'Category created!');
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');
     },
   });
 
-  const handleSubmitForm = async (values) => {
-    mutation.mutate(values);
-    document.getElementById(modalId).close();
+  const onChange = async ({ file, fileList: newFileList }) => {
+    setFileList(newFileList);
+    const newFile = await getBase64(file.originFileObj);
+    form.setFieldValue('category_image', newFile);
   };
 
+  useEffect(() => {
+    if (category) {
+      setFileList([
+        {
+          url: category.category_image,
+        },
+      ]);
+    }
+  }, [category]);
+
   return (
-    <div>
-      {category ? (
-        <Pencil
-          size={16}
-          color="#4bb543"
-          className="cursor-pointer"
-          onClick={() => document.getElementById(modalId).showModal()}
-        />
-      ) : (
-        <button
-          className="btn btn-primary"
-          onClick={() => document.getElementById(modalId).showModal()}
+    <Modal
+      destroyOnClose
+      open={open}
+      onCancel={() => {
+        onCancel();
+        setFileList([]);
+      }}
+      title={category ? 'Edit category' : 'Create category'}
+      footer={[
+        <Button
+          onClick={() => {
+            onCancel();
+            setFileList([]);
+          }}
         >
-          <Plus />
-          Add New Category
-        </button>
-      )}
-      <dialog id={modalId} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">
-            {category ? 'Edit Category' : 'Add New Category'}
-          </h3>
-          <p className="py-4 text-xs font-medium italic">
-            Press ESC key or click the button below to close
-          </p>
-          <form
-            id={formId}
-            className="w-full space-y-4"
-            onSubmit={handleSubmit(handleSubmitForm)}
+          Cancel
+        </Button>,
+        <Button type="primary" htmlType="submit" form="category-form">
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        form={form}
+        preserve={false}
+        id="category-form"
+        name="category-form"
+        labelCol={{ span: 4 }}
+        onFinish={mutate}
+        initialValues={{ ...category }}
+      >
+        <Form.Item
+          label={<span>Name</span>}
+          name="category_name"
+          rules={[{ required: true, message: 'Please input category name!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={<span>Image</span>}
+          name="category_image"
+          rules={[{ required: true, message: 'Please input category image!' }]}
+        >
+          <Upload
+            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+            listType="picture"
+            fileList={fileList}
+            onChange={onChange}
           >
-            <Input
-              type="text"
-              label="Category Name"
-              name="category_name"
-              control={control}
-            />
-            <Input
-              type="file"
-              label="Category Image"
-              name="file"
-              control={control}
-            />
-          </form>
-          <div className="modal-action">
-            <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
-                Submit
-              </button>
-              <button className="btn" onClick={reset}>
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    </div>
+            {fileList?.length && fileList?.length >= 1 ? null : (
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            )}
+          </Upload>
+        </Form.Item>
+      </Form>
+    </Modal>
   );
-};
+}
 
 export default AddEditCategoryModal;

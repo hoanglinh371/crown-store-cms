@@ -1,11 +1,15 @@
-import { useId } from 'react';
-import * as yup from 'yup';
+import React, { useId } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil, Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 
 import Input from '@/components/input';
 import { ERROR_MESSAGE } from '@/constants';
+import { createSize, updateSize } from '@/services';
 
 const schema = yup.object().shape({
   size_value: yup.string().required(ERROR_MESSAGE.REQUIRED),
@@ -14,6 +18,7 @@ const schema = yup.object().shape({
 });
 
 export default function AddEditMaterialModal({ modalId, size }) {
+  const queryClient = useQueryClient();
   const formId = useId();
 
   const { control, handleSubmit, reset } = useForm({
@@ -25,8 +30,19 @@ export default function AddEditMaterialModal({ modalId, size }) {
     resolver: yupResolver(schema),
   });
 
+  const mutation = useMutation({
+    mutationFn: size ? (values) => updateSize(values, size.id) : createSize,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sizes'] });
+      toast.success(size ? 'Update size successful.' : 'Add size successful');
+    },
+    onError: () => {
+      toast.error('Somethings went wrong. Please check again!');
+    },
+  });
+
   const handleSubmitForm = async (values) => {
-    console.log(values);
+    mutation.mutate(values);
     reset();
     document.getElementById(modalId).close();
   };
@@ -42,6 +58,7 @@ export default function AddEditMaterialModal({ modalId, size }) {
         />
       ) : (
         <button
+          type="button"
           className="btn btn-primary"
           onClick={() => document.getElementById(modalId).showModal()}
         >
@@ -76,10 +93,10 @@ export default function AddEditMaterialModal({ modalId, size }) {
           </form>
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
+              <button type="button" className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button className="btn" onClick={reset}>
+              <button type="button" className="btn" onClick={reset}>
                 Close
               </button>
             </form>

@@ -1,9 +1,11 @@
-import { useId } from 'react';
-import * as yup from 'yup';
+import React, { useId } from 'react';
+
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { Pencil, Plus } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Pencil, Plus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import * as yup from 'yup';
 
 import Input from '@/components/input';
 import Textarea from '@/components/textarea';
@@ -29,9 +31,17 @@ export default function AddEditMaterialModal({ modalId, material }) {
   });
 
   const mutation = useMutation({
-    mutationFn: material ? updateMaterial : createMaterial,
+    mutationFn: material
+      ? (values) => updateMaterial(values, material.id)
+      : createMaterial,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
+      toast.success(
+        material ? 'Update material successful.' : 'Add material successful',
+      );
+    },
+    onError: () => {
+      toast.error('Somethings went wrong. Please check again!');
     },
   });
 
@@ -51,6 +61,7 @@ export default function AddEditMaterialModal({ modalId, material }) {
         />
       ) : (
         <button
+          type="button"
           className="btn btn-primary"
           onClick={() => document.getElementById(modalId).showModal()}
         >
@@ -86,10 +97,10 @@ export default function AddEditMaterialModal({ modalId, material }) {
           </form>
           <div className="modal-action">
             <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
+              <button type="button" className="btn btn-primary" form={formId}>
                 Submit
               </button>
-              <button className="btn" onClick={reset}>
+              <button type="button" className="btn" onClick={reset}>
                 Close
               </button>
             </form>

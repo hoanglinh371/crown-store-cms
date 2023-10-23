@@ -1,15 +1,20 @@
-import { useQuery } from '@tanstack/react-query';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
 
-import { getSizes } from '@/services';
+import { useQuery } from '@tanstack/react-query';
+import { Table, Space, Skeleton } from 'antd';
+import { Pencil, Trash } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
+import { getSizes } from '@/services';
+
 import AddEditSizeModal from './components/add-edit-size-modal';
 
+const { Column } = Table;
+
 export default function Size() {
-  const location = useLocation();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
 
@@ -19,7 +24,7 @@ export default function Size() {
   });
 
   if (isLoading) {
-    return <Spinner />;
+    return <Skeleton />;
   }
 
   return (
@@ -28,40 +33,28 @@ export default function Size() {
         <AddEditSizeModal modalId="add-size-modal" />
       </div>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Width</th>
-            <th>Height</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.sizes.map((size, index) => (
-            <tr key={index} className="hover">
-              <th>{index + 1}</th>
-              <td>{size.size_value}</td>
-              <td>{size.width}</td>
-              <td>{size.height}</td>
-              <td>
-                <AddEditSizeModal modalId={`size-${size.id}`} size={size} />
-              </td>
-              <td>
-                <DeleteModalTrigger modalId="delete-size-modal" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Table dataSource={data.data.sizes}>
+        <Column title="#" dataIndex="id" />
+        <Column title="Name" dataIndex="size_value" />
+        <Column title="Width (cm)" dataIndex="width" />
+        <Column title="Height (cm)" dataIndex="height" />
+        <Column
+          title="Action"
+          key="action"
+          render={() => (
+            <Space size="middle">
+              <Pencil size={16} color="green" />
+              <Trash
+                size={16}
+                color="red"
+                onClick={() => setIsDeleteOpen(true)}
+              />
+            </Space>
+          )}
+        />
+      </Table>
 
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
-      />
+      <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
     </div>
   );
 }

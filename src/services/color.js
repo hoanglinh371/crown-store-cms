@@ -11,6 +11,11 @@ export const createColor = async (data) => {
 };
 
 export const updateColor = async (data, id) => {
-  const response = await instance.patch(`/colors/${id}`);
+  const response = await instance.patch(`/colors/${id}`, data);
+  return response;
+};
+
+export const delColor = async (id) => {
+  const response = await instance.delete(`/colors/${id}`);
   return response;
 };

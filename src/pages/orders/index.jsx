@@ -1,12 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React from 'react';
 
-import { getOrders } from '@/services';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 import Pagination from '@/components/pagination';
 import Spinner from '@/components/spinner';
+import { getOrders } from '@/services';
 
-const Orders = () => {
+function Orders() {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
   const navigate = useNavigate();
@@ -42,9 +44,9 @@ const Orders = () => {
           </tr>
         </thead>
         <tbody>
-          {data.data.map((order, index) => (
+          {data.data.map((order) => (
             <tr
-              key={index}
+              key={order.id}
               className="hover cursor-pointer"
               onClick={() => navigate(`/orders/${order.id}`)}
             >
@@ -63,7 +65,6 @@ const Orders = () => {
       />
     </div>
   );
-};
+}
 
 export default Orders;
-47;

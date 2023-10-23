@@ -6,17 +6,55 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
+    'plugin:import/recommended',
+    'airbnb',
+    'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.js'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'import'],
+  settings: {
+    react: { version: '18.2' },
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx'],
+        path: ['./src'],
+      },
+      alias: {
+        extensions: ['.js', '.jsx'],
+        map: [['@', './src']],
+      },
+    },
+  },
   rules: {
+    'linebreak-style': 'off',
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
     'react/prop-types': 'off',
+    'object-curly-newline': 'off',
+    'no-confusing-arrow': 'off',
+    'react/jsx-props-no-spreading': 'off',
     'react-refresh/only-export-components': 'off',
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling']],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        'newlines-between': 'always-and-inside-groups',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
   },
 };

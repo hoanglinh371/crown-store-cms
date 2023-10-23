@@ -14,3 +14,8 @@ export const updateMaterial = async (data, id) => {
   const response = await instance.patch(`/materials/${id}`, data);
   return response;
 };
+
+export const delMaterial = async (id) => {
+  const response = await instance.delete(`/materials/${id}`);
+  return response;
+};

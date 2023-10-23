@@ -1,4 +1,6 @@
-const CurrentUser = ({ avatar, email, name }) => {
+import React from 'react';
+
+function CurrentUser({ avatar, email, name }) {
   return (
     <div className="flex items-center justify-evenly py-12">
       <div className="avatar">
@@ -13,6 +15,6 @@ const CurrentUser = ({ avatar, email, name }) => {
       </div>
     </div>
   );
-};
+}
 
 export default CurrentUser;

@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 
 import instance from '@/services/axios';
 
@@ -6,7 +6,7 @@ const ConfigContext = createContext({
   configs: null,
 });
 
-const ConfigProvider = ({ children }) => {
+function ConfigProvider({ children }) {
   const [configs, setConfigs] = useState();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const ConfigProvider = ({ children }) => {
       {children}
     </ConfigContext.Provider>
   );
-};
+}
 
 export { ConfigContext };
 export default ConfigProvider;
