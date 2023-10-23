@@ -92,32 +92,6 @@ export default function Material() {
   ];
 
   return (
-    // <div className="space-y-12">
-    //   <div className="text-right">
-    //     <AddEditMaterialModal modalId="add-material-modal" />
-    //   </div>
-    //   <Table dataSource={data.data.materials}>
-    //     <Column title="#" dataIndex="id" />
-    //     <Column title="name" dataIndex="material_name" />
-    //     <Column title="Description" dataIndex="material_desc" />
-    //     <Column
-    //       title="Action"
-    //       key="action"
-    //       render={() => (
-    //         <Space size="middle">
-    //           <Pencil size={16} color="green" />
-    //           <Trash
-    //             size={16}
-    //             color="red"
-    //             onClick={() => setIsDeleteOpen(true)}
-    //           />
-    //         </Space>
-    //       )}
-    //     />
-    //   </Table>
-
-    //   <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
-    // </div>
     <Flex vertical gap="large">
       <Card>
         <Input.Search onSearch={onSearch} placeholder="Search here.." />
@@ -143,7 +117,7 @@ export default function Material() {
 
       <AddEditMaterialModal
         open={isFormOpen}
-        product={selectedMaterial}
+        material={selectedMaterial}
         onCancel={onCancel}
       />
     </Flex>

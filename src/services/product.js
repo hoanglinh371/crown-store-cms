@@ -32,3 +32,8 @@ export const createProductDetail = async (productId, data) => {
   });
   return response;
 };
+
+export const deleteProductDetail = async (id) => {
+  const response = await instance.delete(`/product-items/${id}`);
+  return response;
+};

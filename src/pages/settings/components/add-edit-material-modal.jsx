@@ -1,12 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 
-import { UploadOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Form, Input, Select, Upload, Button, Modal } from 'antd';
+import { Form, Input, Button, Modal } from 'antd';
 import { toast } from 'sonner';
 
-import { ConfigContext } from '@/contexts/config.context';
-import { getBase64 } from '@/utils';
 import { createMaterial, updateMaterial } from '@/services';
 
 export default function AddEditMaterialModal({ material, open, onCancel }) {

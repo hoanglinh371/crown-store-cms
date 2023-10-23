@@ -1,71 +1,128 @@
 import React, { useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-import { Table, Space, Skeleton } from 'antd';
-import { Pencil, Trash } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
-
-import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import { getColors } from '@/services/color';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Table, Card, Divider, Button, Input, Flex, Popconfirm } from 'antd';
+import { toast } from 'sonner';
+import { getColors, delColor } from '@/services/color';
 
 import AddEditColorModal from './components/add-edit-color-modal';
 
-const { Column } = Table;
-
 export default function Color() {
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const [selectedColor, setSelectedColor] = useState();
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const [searchParams] = useSearchParams();
-  const page = searchParams.get('page') ?? 1;
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['colors', { page }],
-    queryFn: () => getColors({ page }),
+  const [queryObj, setQueryObj] = useState({
+    page: 1,
+    search: '',
   });
 
-  if (isLoading) {
-    return <Skeleton />;
-  }
+  const { data, isLoading } = useQuery({
+    queryKey: ['colors', queryObj],
+    queryFn: () => getColors(queryObj),
+  });
 
-  return (
-    <div className="space-y-12">
-      <div className="text-right">
-        <AddEditColorModal modalId="add-color-modal" />
-      </div>
-      <Table dataSource={data.data.colors}>
-        <Column title="#" dataIndex="id" />
-        <Column title="Name" dataIndex="color_name" />
-        <Column
-          title="Color"
-          dataIndex="color_hex_code"
-          render={(value) => (
-            <div
-              style={{
-                backgroundColor: `${value}`,
-                width: 28,
-                height: 28,
-                borderRadius: 99,
+  const { mutate } = useMutation({
+    mutationFn: () => delColor(selectedColor.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['colors']);
+      toast.success('Delete Color');
+    },
+  });
+
+  const onSearch = (search) => {
+    setQueryObj({
+      ...queryObj,
+      search,
+    });
+  };
+
+  const onChange = (page) => {
+    setQueryObj({
+      ...queryObj,
+      page,
+    });
+  };
+
+  const onCancel = () => {
+    setSelectedColor(undefined);
+    setIsFormOpen(false);
+  };
+
+  const onConfirm = () => {
+    mutate();
+  };
+
+  const columns = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'color_name',
+    },
+    {
+      key: 'color',
+      title: 'Color',
+      dataIndex: 'color_hex_code',
+      render: (value) => (
+        <div
+          style={{
+            backgroundColor: `${value}`,
+            width: 28,
+            height: 28,
+            borderRadius: 99,
+          }}
+        />
+      ),
+    },
+    {
+      key: 'action',
+      title: 'Action',
+      render: (_, record) => (
+        <span>
+          <span>
+            <EditOutlined
+              onClick={() => {
+                setSelectedColor(record);
+                setIsFormOpen(true);
               }}
             />
-          )}
-        />
-        <Column
-          title="Action"
-          key="action"
-          render={() => (
-            <Space size="middle">
-              <Pencil size={16} color="green" />
-              <Trash
-                size={16}
-                color="red"
-                onClick={() => setIsDeleteOpen(true)}
-              />
-            </Space>
-          )}
-        />
-      </Table>
+          </span>
+          <Divider type="vertical" />
+          <Popconfirm
+            title="Delete color"
+            description="Are you sure to delete this color?"
+            onConfirm={onConfirm}
+          >
+            <DeleteOutlined onClick={() => setSelectedColor(record)} />
+          </Popconfirm>
+        </span>
+      ),
+    },
+  ];
 
-      <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
-    </div>
+  return (
+    <Flex vertical gap="large">
+      <Card>
+        <Input.Search onSearch={onSearch} placeholder="Search here..." />
+      </Card>
+
+      <Card
+        title={<span>Colors</span>}
+        extra={
+          <Button type="primary" onClick={() => setIsFormOpen(true)}>
+            Add Color
+          </Button>
+        }
+      >
+        <Table columns={columns} dataSource={data?.data} loading={isLoading} />
+      </Card>
+
+      <AddEditColorModal
+        open={isFormOpen}
+        color={selectedColor}
+        onCancel={onCancel}
+      />
+    </Flex>
   );
 }
