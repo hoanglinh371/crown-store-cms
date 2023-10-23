@@ -1,34 +1,17 @@
-import React, { useId } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
+import { UploadOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Pencil, Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Form, Input, Select, Upload, Button, Modal } from 'antd';
 import { toast } from 'sonner';
-import * as yup from 'yup';
 
-import Input from '@/components/input';
-import Textarea from '@/components/textarea';
-
-import { ERROR_MESSAGE } from '@/constants';
+import { ConfigContext } from '@/contexts/config.context';
+import { getBase64 } from '@/utils';
 import { createMaterial, updateMaterial } from '@/services';
 
-const schema = yup.object().shape({
-  material_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  material_desc: yup.string().required(ERROR_MESSAGE.REQUIRED),
-});
-
-export default function AddEditMaterialModal({ modalId, material }) {
+export default function AddEditMaterialModal({ material, open, onCancel }) {
   const queryClient = useQueryClient();
-  const formId = useId();
-
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      material_name: material ? material.material_name : '',
-      material_desc: material ? material.material_desc : '',
-    },
-    resolver: yupResolver(schema),
-  });
+  const [form] = Form.useForm();
 
   const mutation = useMutation({
     mutationFn: material
@@ -36,77 +19,65 @@ export default function AddEditMaterialModal({ modalId, material }) {
       : createMaterial,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
-      toast.success(
-        material ? 'Update material successful.' : 'Add material successful',
-      );
+      onCancel();
+      toast.success(material ? 'Update material!' : 'Created material!');
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');
     },
   });
 
-  const handleSubmitForm = async (values) => {
+  const onFinish = async (values) => {
     mutation.mutate(values);
-    document.getElementById(modalId).close();
   };
 
   return (
-    <div>
-      {material ? (
-        <Pencil
-          size={16}
-          color="#4bb543"
-          className="cursor-pointer"
-          onClick={() => document.getElementById(modalId).showModal()}
-        />
-      ) : (
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => document.getElementById(modalId).showModal()}
+    <Modal
+      destroyOnClose
+      open={open}
+      onCancel={() => {
+        onCancel();
+      }}
+      title={material ? 'Edit Material' : 'Create Material'}
+      footer={[
+        <Button
+          onClick={() => {
+            onCancel();
+          }}
         >
-          <Plus />
-          Add New Material
-        </button>
-      )}
-      <dialog id={modalId} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">
-            {material ? 'Edit Material' : 'Add New Material'}
-          </h3>
-          <p className="py-4 text-xs font-medium italic">
-            Press ESC key or click the button below to close
-          </p>
-          <form
-            id={formId}
-            className="w-full space-y-4"
-            onSubmit={handleSubmit(handleSubmitForm)}
-          >
-            <Input
-              type="text"
-              label="Material Name"
-              name="material_name"
-              control={control}
-            />
-            <Textarea
-              type="text"
-              label="Material Description"
-              name="material_desc"
-              control={control}
-            />
-          </form>
-          <div className="modal-action">
-            <form method="dialog" className="space-x-4">
-              <button type="button" className="btn btn-primary" form={formId}>
-                Submit
-              </button>
-              <button type="button" className="btn" onClick={reset}>
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    </div>
+          Cancel
+        </Button>,
+        <Button type="primary" htmlType="submit" form="material-form">
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        form={form}
+        id="material-form"
+        name="material-form"
+        preserve={false}
+        labelCol={{ span: 4 }}
+        onFinish={onFinish}
+        initialValues={{ ...material }}
+      >
+        <Form.Item
+          label={<span>Name</span>}
+          name="material_name"
+          rules={[
+            {
+              require: true,
+              message: 'Please input material name!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item label={<span>Description</span>} name="material_desc">
+          <Input.TextArea />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 }

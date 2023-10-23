@@ -103,48 +103,11 @@ export default function CategoriesPage() {
         />
       </Card>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Image</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.categories.map((category, index) => (
-            <tr key={index} className="hover">
-              <th>{category.id}</th>
-              <td>{category.category_name}</td>
-              <td>
-                <div>
-                  <img
-                    src={category.category_image}
-                    alt="category_image"
-                    className="h-[100px] w-[75px] object-cover"
-                  />
-                </div>
-              </td>
-              <td>
-                <AddEditCategoryModal
-                  modalId={`category-${category.id}`}
-                  category={category}
-                />
-              </td>
-              <td>
-                <DeleteModalTrigger modalId="delete-category-modal" />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
+      <AddEditCategoryModal
+        open={isFormOpen}
+        category={selectedCategory}
+        refetch={refetch}
+        onCancel={onCancel}
       />
     </Flex>
   );
