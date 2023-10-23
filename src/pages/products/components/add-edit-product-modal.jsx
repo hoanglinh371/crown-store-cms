@@ -35,7 +35,7 @@ export default function AddEditProductModel({ product, open, onCancel }) {
     mutation.mutate(values);
   };
 
-  const onChange = async ({ file, newFileList }) => {
+  const onChange = async ({ file, fileList: newFileList }) => {
     setFileList(newFileList);
     const newFile = await getBase64(file.originFileObj);
     form.setFieldValue('product_image', newFile);

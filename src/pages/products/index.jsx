@@ -75,19 +75,23 @@ export default function ProductsPage() {
       key: 'image',
       title: 'image',
       dataIndex: 'product_image',
-      render: (value) => <img src={value} alt="img" width={192} />,
+      render: (value) => (
+        <img src={value} alt="img" width={192} className="rounded-3xl" />
+      ),
     },
     {
       key: 'action',
       title: 'Action',
       render: (_, record) => (
         <span>
-          <EditOutlined
-            onClick={() => {
-              setSelectedProduct(record);
-              setIsFormOpen(true);
-            }}
-          />
+          <span>
+            <EditOutlined
+              onClick={() => {
+                setSelectedProduct(record);
+                setIsFormOpen(true);
+              }}
+            />
+          </span>
           <Divider type="vertical" />
           <Popconfirm
             title="Delete product"

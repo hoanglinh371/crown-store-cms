@@ -1,31 +1,44 @@
 import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
-import { Table, Space, Divider, Card, Button } from 'antd';
-import { useSearchParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Table, Divider, Card, Button, Popconfirm, Flex } from 'antd';
+import { toast } from 'sonner';
 
-import DeleteModalTrigger from '@/components/delete-modal-trigger';
 import { getCategories, deleteCategory } from '@/services';
 
 import AddEditCategoryModal from './components/add-edit-category-modal';
 
 export default function CategoriesPage() {
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+  const [queryObj, setQueryObj] = useState({
+    page: 1,
+  });
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const [searchParams] = useSearchParams();
-  const page = searchParams.get('page') ?? 1;
-  const search = searchParams.get('search') ?? '';
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['categories', { page, search }],
-    queryFn: () => getCategories({ page, search }),
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['categories', queryObj],
+    queryFn: () => getCategories(queryObj),
   });
 
-  const handleDeleteIconClick = (id) => {
-    setSelectedId(id);
-    setIsDeleteOpen(true);
+  const { mutate } = useMutation({
+    mutationFn: () => deleteCategory(selectedCategory.id),
+    onSuccess: () => {
+      refetch();
+      toast.success('Category deleted!');
+    },
+  });
+
+  const handleTableChange = (page) => {
+    setQueryObj({
+      ...queryObj,
+      page,
+    });
+  };
+
+  const onCancel = () => {
+    setSelectedCategory(undefined);
+    setIsFormOpen(false);
   };
 
   const columns = [
@@ -38,39 +51,64 @@ export default function CategoriesPage() {
       title: 'Image',
       key: 'image',
       dataIndex: 'category_image',
-      render: (value) => <img src={value} alt="img" width={192} />,
+      render: (value) => (
+        <img src={value} alt="img" width={192} className="rounded-3xl" />
+      ),
     },
     {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <Space size="small">
-          <EditOutlined />
+        <span>
+          <span>
+            <EditOutlined
+              onClick={() => {
+                setSelectedCategory(record);
+                setIsFormOpen(true);
+              }}
+            />
+          </span>
           <Divider type="vertical" />
-          <DeleteOutlined onClick={() => handleDeleteIconClick(record.id)} />
-        </Space>
+          <Popconfirm
+            title="Delete category"
+            description="Are you sure to delete this category?"
+            onConfirm={mutate}
+          >
+            <DeleteOutlined onClick={() => setSelectedCategory(record)} />
+          </Popconfirm>
+        </span>
       ),
     },
   ];
 
   return (
-    <div>
+    <Flex vertical gap="large">
       <Card
-        title="Category"
-        extra={<Button type="primary">Add Category</Button>}
+        title={<span>Categories</span>}
+        extra={
+          <Button type="primary" onClick={() => setIsFormOpen(true)}>
+            Add Category
+          </Button>
+        }
       >
         <Table
           columns={columns}
+          dataSource={data?.data}
           loading={isLoading}
-          dataSource={data?.data.categories}
+          pagination={{
+            total: data?.metadata.total,
+            pageSize: data?.metadata.per_page,
+            onChange: handleTableChange,
+          }}
         />
       </Card>
 
-      <DeleteModalTrigger
-        open={isDeleteOpen}
-        onOpenChange={setIsDeleteOpen}
-        handler={() => deleteCategory(selectedId)}
+      <AddEditCategoryModal
+        open={isFormOpen}
+        category={selectedCategory}
+        refetch={refetch}
+        onCancel={onCancel}
       />
-    </div>
+    </Flex>
   );
 }
