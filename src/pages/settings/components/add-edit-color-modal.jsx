@@ -1,32 +1,13 @@
-import React, { useId } from 'react';
+import React from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Pencil, Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Form, Input, Button, Modal } from 'antd';
 import { toast } from 'sonner';
-import * as yup from 'yup';
-
-import Input from '@/components/input';
-import { ERROR_MESSAGE } from '@/constants';
 import { createColor, updateColor } from '@/services';
 
-const schema = yup.object().shape({
-  color_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  color_hex_code: yup.string().required(ERROR_MESSAGE.REQUIRED),
-});
-
-export default function AddEditColorModal({ modalId, color }) {
-  const formId = useId();
+export default function AddEditColorModal({ color, open, onCancel }) {
   const queryClient = useQueryClient();
-
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      color_name: color?.color_name ?? '',
-      color_hex_code: color ? color.color_hex_code : '#000000',
-    },
-    resolver: yupResolver(schema),
-  });
+  const [form] = Form.useForm();
 
   const mutation = useMutation({
     mutationFn: color ? (values) => updateColor(values, color.id) : createColor,
@@ -41,56 +22,65 @@ export default function AddEditColorModal({ modalId, color }) {
     },
   });
 
-  const handleSubmitForm = async (values) => {
+  const onFinish = async (values) => {
     mutation.mutate(values);
-    document.getElementById(modalId).close();
   };
 
   return (
-    <div>
-      {color ? (
-        <Pencil
-          size={16}
-          color="#4bb543"
-          className="cursor-pointer"
-          onClick={() => document.getElementById(modalId).showModal()}
-        />
-      ) : (
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => document.getElementById(modalId).showModal()}
+    <Modal
+      destroyOnClose
+      open={open}
+      onCancel={() => {
+        onCancel();
+      }}
+      title={color ? 'Edit Color' : 'Created Color'}
+      footer={[
+        <Button
+          onClick={() => {
+            onCancel();
+          }}
         >
-          <Plus />
-          Add New Color
-        </button>
-      )}
-      <dialog id={modalId} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
-          <form
-            id={formId}
-            className="w-full space-y-4"
-            onSubmit={handleSubmit(handleSubmitForm)}
-          >
-            <Input type="text" name="color_name" control={control} />
-            <Input type="color" name="color_hex_code" control={control} />
-          </form>
-          <div className="modal-action">
-            <form method="dialog" className="space-x-4">
-              <button className="btn btn-primary" form={formId}>
-                Submit
-              </button>
-              <button className="btn" onClick={reset}>
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    </div>
+          Cancel
+        </Button>,
+        <Button type="primary" htmlType="submit" form="color-form">
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        form={form}
+        id="color-form"
+        name="color-form"
+        preserve={false}
+        labelCol={{ span: 4 }}
+        onFinish={onFinish}
+        initialValues={{ ...color }}
+      >
+        <Form.Item
+          lable={<span>Name</span>}
+          name="color_name"
+          rules={[
+            {
+              require: true,
+              message: 'Please input color name!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          lable={<span>Color</span>}
+          name="color_hex_code"
+          rules={[
+            {
+              require: true,
+              message: 'Please input color hex!',
+            },
+          ]}
+        >
+          <Input type="color" />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 }

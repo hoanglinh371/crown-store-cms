@@ -1,108 +1,100 @@
-import React, { useId } from 'react';
+import React from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Pencil, Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Form, Input, Button, Modal } from 'antd';
 import { toast } from 'sonner';
-import * as yup from 'yup';
 
-import Input from '@/components/input';
-import { ERROR_MESSAGE } from '@/constants';
 import { createSize, updateSize } from '@/services';
 
-const schema = yup.object().shape({
-  size_value: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  width: yup.number().required(ERROR_MESSAGE.REQUIRED),
-  height: yup.number().required(ERROR_MESSAGE.REQUIRED),
-});
-
-export default function AddEditMaterialModal({ modalId, size }) {
+export default function AddEditMaterialModal({ size, open, onCancel }) {
   const queryClient = useQueryClient();
-  const formId = useId();
-
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      size_value: size ? size.size_value : '',
-      size_width: size ? size.width : 0,
-      size_height: size ? size.height : 0,
-    },
-    resolver: yupResolver(schema),
-  });
+  const [form] = Form.useForm();
 
   const mutation = useMutation({
     mutationFn: size ? (values) => updateSize(values, size.id) : createSize,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sizes'] });
-      toast.success(size ? 'Update size successful.' : 'Add size successful');
+      toast.success(
+        size ? 'Update size successful.' : 'Created size successful',
+      );
     },
     onError: () => {
       toast.error('Somethings went wrong. Please check again!');
     },
   });
 
-  const handleSubmitForm = async (values) => {
+  const onFinish = async (values) => {
     mutation.mutate(values);
-    reset();
-    document.getElementById(modalId).close();
   };
 
   return (
-    <div>
-      {size ? (
-        <Pencil
-          size={16}
-          color="#4bb543"
-          className="cursor-pointer"
-          onClick={() => document.getElementById(modalId).showModal()}
-        />
-      ) : (
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => document.getElementById(modalId).showModal()}
+    <Modal
+      destroyOnClose
+      open={open}
+      onCancel={() => {
+        onCancel();
+      }}
+      title={size ? 'Edit Size' : 'Created Size'}
+      footer={[
+        <Button
+          onClick={() => {
+            onCancel();
+          }}
         >
-          <Plus />
-          Add New Size
-        </button>
-      )}
-      <dialog id={modalId} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
-          <form
-            id={formId}
-            className="w-full space-y-4"
-            onSubmit={handleSubmit(handleSubmitForm)}
-          >
-            <Input
-              type="text"
-              label="Size Value"
-              name="size_value"
-              control={control}
-            />
-            <Input type="number" label="Width" name="width" control={control} />
-            <Input
-              type="number"
-              label="Height"
-              name="height"
-              control={control}
-            />
-          </form>
-          <div className="modal-action">
-            <form method="dialog" className="space-x-4">
-              <button type="button" className="btn btn-primary" form={formId}>
-                Submit
-              </button>
-              <button type="button" className="btn" onClick={reset}>
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    </div>
+          Cancel
+        </Button>,
+        <Button type="primary" htmlType="submit" form="size-form">
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        form={form}
+        id="size-form"
+        name="size-form"
+        preserve={false}
+        labelCol={{ span: 4 }}
+        onFinish={onFinish}
+        initialValues={{ ...size }}
+      >
+        <Form.Item
+          label={<span>Size</span>}
+          name="size_value"
+          rules={[
+            {
+              require: true,
+              message: 'Please input size name!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label={<span>width</span>}
+          name="width"
+          rules={[
+            {
+              require: true,
+              message: 'Please input material name!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label={<span>height</span>}
+          name="height"
+          rules={[
+            {
+              require: true,
+              message: 'Please input material name!',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 }
