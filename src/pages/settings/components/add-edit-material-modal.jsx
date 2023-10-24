@@ -63,7 +63,7 @@ export default function AddEditMaterialModal({ material, open, onCancel }) {
           name="material_name"
           rules={[
             {
-              require: true,
+              required: true,
               message: 'Please input material name!',
             },
           ]}

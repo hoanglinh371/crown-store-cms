@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Table, Card, Divider, Button, Input, Flex, Popconfirm } from 'antd';
+import { Table, Card, Divider, Button, Flex, Popconfirm } from 'antd';
 import { toast } from 'sonner';
+
 import { getColors, delColor } from '@/services/color';
 
 import AddEditColorModal from './components/add-edit-color-modal';
@@ -13,14 +14,9 @@ export default function Color() {
   const [selectedColor, setSelectedColor] = useState();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const [queryObj, setQueryObj] = useState({
-    page: 1,
-    search: '',
-  });
-
   const { data, isLoading } = useQuery({
-    queryKey: ['colors', queryObj],
-    queryFn: () => getColors(queryObj),
+    queryKey: ['colors'],
+    queryFn: () => getColors(),
   });
 
   const { mutate } = useMutation({
@@ -30,20 +26,6 @@ export default function Color() {
       toast.success('Delete Color');
     },
   });
-
-  const onSearch = (search) => {
-    setQueryObj({
-      ...queryObj,
-      search,
-    });
-  };
-
-  const onChange = (page) => {
-    setQueryObj({
-      ...queryObj,
-      page,
-    });
-  };
 
   const onCancel = () => {
     setSelectedColor(undefined);
@@ -103,10 +85,6 @@ export default function Color() {
 
   return (
     <Flex vertical gap="large">
-      <Card>
-        <Input.Search onSearch={onSearch} placeholder="Search here..." />
-      </Card>
-
       <Card
         title={<span>Colors</span>}
         extra={

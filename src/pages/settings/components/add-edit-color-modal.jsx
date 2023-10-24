@@ -3,6 +3,7 @@ import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Form, Input, Button, Modal } from 'antd';
 import { toast } from 'sonner';
+
 import { createColor, updateColor } from '@/services';
 
 export default function AddEditColorModal({ color, open, onCancel }) {
@@ -57,11 +58,11 @@ export default function AddEditColorModal({ color, open, onCancel }) {
         initialValues={{ ...color }}
       >
         <Form.Item
-          lable={<span>Name</span>}
+          label={<span>Name</span>}
           name="color_name"
           rules={[
             {
-              require: true,
+              required: true,
               message: 'Please input color name!',
             },
           ]}
@@ -69,11 +70,11 @@ export default function AddEditColorModal({ color, open, onCancel }) {
           <Input />
         </Form.Item>
         <Form.Item
-          lable={<span>Color</span>}
+          label={<span>Color</span>}
           name="color_hex_code"
           rules={[
             {
-              require: true,
+              required: true,
               message: 'Please input color hex!',
             },
           ]}

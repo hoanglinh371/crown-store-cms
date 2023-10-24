@@ -62,7 +62,7 @@ export default function AddEditMaterialModal({ size, open, onCancel }) {
           name="size_value"
           rules={[
             {
-              require: true,
+              required: true,
               message: 'Please input size name!',
             },
           ]}
@@ -75,8 +75,8 @@ export default function AddEditMaterialModal({ size, open, onCancel }) {
           name="width"
           rules={[
             {
-              require: true,
-              message: 'Please input material name!',
+              required: true,
+              message: 'Please input width!',
             },
           ]}
         >
@@ -87,8 +87,8 @@ export default function AddEditMaterialModal({ size, open, onCancel }) {
           name="height"
           rules={[
             {
-              require: true,
-              message: 'Please input material name!',
+              required: true,
+              message: 'Please input height!',
             },
           ]}
         >

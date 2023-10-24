@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Table, Card, Divider, Button, Input, Flex, Popconfirm } from 'antd';
+import { Table, Card, Divider, Button, Flex, Popconfirm } from 'antd';
 import { toast } from 'sonner';
 
 import { getSizes, delSize } from '@/services';
@@ -13,14 +13,10 @@ export default function Size() {
   const queryClient = useQueryClient();
   const [selectedSize, setSelectedSize] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [queryObj, setQueryObj] = useState({
-    page: 1,
-    search: '',
-  });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['sizes', queryObj],
-    queryFn: () => getSizes(queryObj),
+    queryKey: ['sizes'],
+    queryFn: () => getSizes(),
   });
 
   const { mutate } = useMutation({
@@ -30,20 +26,6 @@ export default function Size() {
       toast.success('Delete Size');
     },
   });
-
-  const onSearch = (search) => {
-    setQueryObj({
-      ...queryObj,
-      search,
-    });
-  };
-
-  const onChange = (page) => {
-    setQueryObj({
-      ...queryObj,
-      page,
-    });
-  };
 
   const onCancel = () => {
     setSelectedSize(undefined);
@@ -97,39 +79,7 @@ export default function Size() {
   ];
 
   return (
-    // <div className="space-y-12">
-    //   <div className="text-right">
-    //     <AddEditSizeModal modalId="add-size-modal" />
-    //   </div>
-
-    //   <Table dataSource={data.data.sizes}>
-    //     <Column title="#" dataIndex="id" />
-    //     <Column title="Name" dataIndex="size_value" />
-    //     <Column title="Width (cm)" dataIndex="width" />
-    //     <Column title="Height (cm)" dataIndex="height" />
-    //     <Column
-    //       title="Action"
-    //       key="action"
-    //       render={() => (
-    //         <Space size="middle">
-    //           <Pencil size={16} color="green" />
-    //           <Trash
-    //             size={16}
-    //             color="red"
-    //             onClick={() => setIsDeleteOpen(true)}
-    //           />
-    //         </Space>
-    //       )}
-    //     />
-    //   </Table>
-
-    //   <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
-    // </div>
     <Flex vertical gap="large">
-      <Card>
-        <Input.Search onSearch={onSearch} placeholder="Search here.." />
-      </Card>
-
       <Card
         title={<span>Sizes</span>}
         extra={
@@ -138,12 +88,7 @@ export default function Size() {
           </Button>
         }
       >
-        <Table
-          columns={columns}
-          dataSource={data?.data}
-          loading={isLoading}
-          pagination={{ onChange }}
-        />
+        <Table columns={columns} dataSource={data?.data} loading={isLoading} />
       </Card>
 
       <AddEditSizeModal

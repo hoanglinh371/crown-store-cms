@@ -13,14 +13,10 @@ export default function Material() {
   const queryClient = useQueryClient();
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [queryObj, setQueryObj] = useState({
-    page: 1,
-    search: '',
-  });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['materials', queryObj],
-    queryFn: () => getMaterials(queryObj),
+    queryKey: ['materials'],
+    queryFn: () => getMaterials(),
   });
 
   const { mutate } = useMutation({
@@ -30,20 +26,6 @@ export default function Material() {
       toast.success('Delete material');
     },
   });
-
-  const onSearch = (search) => {
-    setQueryObj({
-      ...queryObj,
-      search,
-    });
-  };
-
-  const onChange = (page) => {
-    setQueryObj({
-      ...queryObj,
-      page,
-    });
-  };
 
   const onCancel = () => {
     setSelectedMaterial(undefined);
@@ -93,10 +75,6 @@ export default function Material() {
 
   return (
     <Flex vertical gap="large">
-      <Card>
-        <Input.Search onSearch={onSearch} placeholder="Search here.." />
-      </Card>
-
       <Card
         title={<span>Materials</span>}
         extra={
@@ -105,14 +83,7 @@ export default function Material() {
           </Button>
         }
       >
-        <Table
-          columns={columns}
-          dataSource={data?.data}
-          loading={isLoading}
-          pagination={{
-            onChange,
-          }}
-        />
+        <Table columns={columns} dataSource={data?.data} loading={isLoading} />
       </Card>
 
       <AddEditMaterialModal
