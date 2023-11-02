@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Table, Card, Divider, Button, Input, Flex, Popconfirm } from 'antd';
+import { Table, Card, Divider, Button, Flex, Popconfirm } from 'antd';
 import { toast } from 'sonner';
 
 import { delMaterial, getMaterials } from '@/services';

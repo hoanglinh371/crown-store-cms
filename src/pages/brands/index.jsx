@@ -1,65 +1,120 @@
 import React, { useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-import { Space, Table, Skeleton } from 'antd';
-import { Pencil, Trash } from 'lucide-react';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Table, Card, Button, Divider, Popconfirm } from 'antd';
 import { useSearchParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
-import { getBrands } from '@/services';
+import { deleteBrand, getBrands } from '@/services';
 
 import AddEditBrandModal from './components/add-edit-brand-modal';
 
-const { Column } = Table;
-
 export default function BrandsPage() {
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState();
 
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['brands', { page }],
     queryFn: () => getBrands({ page }),
   });
 
-  if (isLoading) {
-    return <Skeleton />;
-  }
+  const { mutate } = useMutation({
+    mutationFn: () => deleteBrand(selectedBrand.id),
+    onSuccess: () => {
+      refetch();
+      toast.success('Category deleted!');
+    },
+  });
+
+  const onCancel = () => {
+    setSelectedBrand(undefined);
+    setIsFormOpen(false);
+  };
+
+  const columns = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'brand_name',
+    },
+    {
+      key: 'email',
+      title: 'Email',
+      dataIndex: 'brand_email',
+    },
+    {
+      key: 'phone',
+      title: 'Phone',
+      dataIndex: 'brand_phone',
+    },
+    {
+      key: 'address',
+      title: 'Address',
+      dataIndex: 'brand_address',
+    },
+    {
+      key: 'action',
+      title: 'Action',
+      render: (_, record) => (
+        <span>
+          <span>
+            <EditOutlined
+              onClick={() => {
+                setSelectedBrand(record);
+                setIsFormOpen(true);
+              }}
+            />
+          </span>
+          <Divider type="vertical" />
+          <span>
+            <Popconfirm
+              title="Delete brand"
+              description="Are you sure to delete this brand?"
+              onConfirm={mutate}
+            >
+              <DeleteOutlined />
+            </Popconfirm>
+          </span>
+        </span>
+      ),
+    },
+  ];
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Type here"
-          className="input input-bordered w-full max-w-xs"
+    <>
+      <Card
+        title={<span>Brands</span>}
+        extra={
+          <Button type="primary" onClick={() => setIsFormOpen(true)}>
+            Add Brand
+          </Button>
+        }
+      >
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          loading={isLoading}
+          pagination={{
+            total: data?.metadata.total,
+            pageSize: data?.metadata.per_page,
+            onChange: (_page) => _page + 1,
+          }}
         />
-        <AddEditBrandModal modalId="add-brand-modal" />
-      </div>
-      <Table dataSource={data.data.brands} pagination={{}}>
-        <Column title="#" dataIndex="id" />
-        <Column title="Name" dataIndex="brand_name" />
-        <Column title="Email" dataIndex="brand_email" />
-        <Column title="Phone" dataIndex="brand_phone" />
-        <Column title="Address" dataIndex="brand_address" />
-        <Column
-          title="Action"
-          key="action"
-          render={() => (
-            <Space size="middle">
-              <Pencil size={16} color="green" />
-              <Trash
-                size={16}
-                color="red"
-                onClick={() => setIsDeleteOpen(true)}
-              />
-            </Space>
-          )}
-        />
-      </Table>
+      </Card>
+
+      <AddEditBrandModal
+        open={isFormOpen}
+        onCancel={onCancel}
+        brand={selectedBrand}
+      />
 
       <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
-    </div>
+    </>
   );
 }

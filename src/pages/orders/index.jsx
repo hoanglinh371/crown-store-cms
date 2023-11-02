@@ -1,14 +1,12 @@
 import React from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
+import { Table, Card } from 'antd';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import Pagination from '@/components/pagination';
-import Spinner from '@/components/spinner';
 import { getOrders } from '@/services';
 
 function Orders() {
-  const location = useLocation();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') ?? 1;
   const navigate = useNavigate();
@@ -18,9 +16,18 @@ function Orders() {
     queryFn: () => getOrders({ page }),
   });
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+  const columns = [
+    {
+      key: 'date',
+      title: 'Date',
+      dataIndex: 'order_date',
+    },
+    {
+      key: 'total',
+      title: 'Total',
+      dataIndex: 'order_total',
+    },
+  ];
 
   return (
     <div className="space-y-12">
@@ -35,34 +42,21 @@ function Orders() {
         </form>
       </div>
 
-      <table className="table table-zebra table-lg">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Date</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.data.map((order) => (
-            <tr
-              key={order.id}
-              className="hover cursor-pointer"
-              onClick={() => navigate(`/orders/${order.id}`)}
-            >
-              <th>{order.id}</th>
-              <td>{order.order_date}</td>
-              <td>{order.order_total}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <Pagination
-        pathname={location.pathname}
-        totalPages={data.pagination.total_pages}
-        currentPage={data.pagination.current_page}
-      />
+      <Card>
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          loading={isLoading}
+          onRow={(record) => ({
+            onClick: () => navigate(`/orders/${record.id}`),
+          })}
+          pagination={{
+            total: data?.metadata.total,
+            pageSize: data?.metadata.per_page,
+            onChange: (_page) => _page + 1,
+          }}
+        />
+      </Card>
     </div>
   );
 }

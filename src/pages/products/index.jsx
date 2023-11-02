@@ -2,7 +2,16 @@ import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Table, Card, Divider, Button, Input, Flex, Popconfirm } from 'antd';
+import {
+  Table,
+  Card,
+  Divider,
+  Button,
+  Input,
+  Flex,
+  Popconfirm,
+  Image,
+} from 'antd';
 import { Link } from 'react-router-dom';
 
 import { toast } from 'sonner';
@@ -76,7 +85,7 @@ export default function ProductsPage() {
       title: 'image',
       dataIndex: 'product_image',
       render: (value) => (
-        <img src={value} alt="img" width={192} className="rounded-3xl" />
+        <Image src={value} alt="img" width={192} className="rounded-3xl" />
       ),
     },
     {

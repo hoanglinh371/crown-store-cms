@@ -14,3 +14,8 @@ export const updateBrand = async (data, id) => {
   const response = await instance.patch(`/brands/${id}`, data);
   return response;
 };
+
+export const deleteBrand = async (id) => {
+  const response = await instance.delete(`/brands/${id}`);
+  return response;
+};

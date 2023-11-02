@@ -1,41 +1,16 @@
-import React, { useId } from 'react';
+import React from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Pencil, Plus } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Form, Input, Modal, Button } from 'antd';
 import { toast } from 'sonner';
-import * as yup from 'yup';
 
-import Input from '@/components/input';
-import { ERROR_MESSAGE } from '@/constants';
 import { createBrand, updateBrand } from '@/services';
 
-const schema = yup.object().shape({
-  brand_name: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  brand_email: yup
-    .string()
-    .email(ERROR_MESSAGE.EMAIL)
-    .required(ERROR_MESSAGE.REQUIRED),
-  brand_phone: yup.string().required(ERROR_MESSAGE.REQUIRED),
-  brand_address: yup.string().required(ERROR_MESSAGE.REQUIRED),
-});
-
-function AddEditBrandModal({ modalId, brand }) {
+function AddEditBrandModal({ open, onCancel, brand }) {
+  const [form] = Form.useForm();
   const queryClient = useQueryClient();
-  const formId = useId();
 
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      brand_name: brand ? brand.brand_name : '',
-      brand_email: brand ? brand.brand_email : '',
-      brand_phone: brand ? brand.brand_phone : '',
-      brand_address: brand ? brand.brand_address : '',
-    },
-    resolver: yupResolver(schema),
-  });
-
-  const mutation = useMutation({
+  const { mutate } = useMutation({
     mutationFn: brand ? (values) => updateBrand(values, brand.id) : createBrand,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] });
@@ -48,81 +23,64 @@ function AddEditBrandModal({ modalId, brand }) {
     },
   });
 
-  const handleSubmitForm = async (values) => {
-    mutation.mutate(values);
-    document.getElementById(modalId).close();
-  };
-
   return (
-    <div>
-      {brand ? (
-        <Pencil
-          size={16}
-          color="#4bb543"
-          className="cursor-pointer"
-          onClick={() => document.getElementById(modalId).showModal()}
-        />
-      ) : (
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => document.getElementById(modalId).showModal()}
+    <Modal
+      destroyOnClose
+      open={open}
+      onCancel={onCancel}
+      title={brand ? 'Edit brand' : 'Create brand'}
+      footer={[
+        <Button
+          onClick={() => {
+            onCancel();
+          }}
         >
-          <Plus />
-          Add New Brand
-        </button>
-      )}
-      <dialog id={modalId} className="modal">
-        <div className="modal-box">
-          <h3 className="text-lg font-bold">
-            {brand ? 'Edit Brand' : 'Add New Brand'}
-          </h3>
-          <p className="py-4 text-xs font-medium italic">
-            Press ESC key or click the button below to close
-          </p>
-          <form
-            id={formId}
-            className="w-full space-y-4"
-            onSubmit={handleSubmit(handleSubmitForm)}
-          >
-            <Input
-              type="text"
-              label="Brand Name"
-              name="brand_name"
-              control={control}
-            />
-            <Input
-              type="text"
-              label="Brand Email"
-              name="brand_email"
-              control={control}
-            />
-            <Input
-              type="text"
-              label="Brand Phone"
-              name="brand_phone"
-              control={control}
-            />
-            <Input
-              type="text"
-              label="Brand Address"
-              name="brand_address"
-              control={control}
-            />
-          </form>
-          <div className="modal-action">
-            <form method="dialog" className="space-x-4">
-              <button type="button" className="btn btn-primary" form={formId}>
-                Submit
-              </button>
-              <button type="button" className="btn" onClick={reset}>
-                Close
-              </button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    </div>
+          Cancel
+        </Button>,
+        <Button type="primary" htmlType="submit" form="brand-form">
+          Submit
+        </Button>,
+      ]}
+    >
+      <Form
+        form={form}
+        preserve={false}
+        id="brand-form"
+        name="brand-form"
+        labelCol={{ span: 4 }}
+        onFinish={mutate}
+        initialValues={{ ...brand }}
+      >
+        <Form.Item
+          label="Name"
+          name="brand_name"
+          rules={[{ required: true, message: 'Please input brand name' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Email"
+          name="brand_email"
+          rules={[{ required: true, message: 'Please input brand email' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Phone"
+          name="brand_phone"
+          rules={[{ required: true, message: 'Please input brand phone' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label="Address"
+          name="brand_address"
+          rules={[{ required: true, message: 'Please input brand address' }]}
+        >
+          <Input />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 }
 
