@@ -1,37 +1,32 @@
 import React, { useContext } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { useMutation } from '@tanstack/react-query';
+import { Form, Input, Button } from 'antd';
 
-import Input from '@/components/input';
-import { ERROR_MESSAGE } from '@/constants';
+import { toast } from 'sonner';
+
 import { UserContext } from '@/contexts/user.context';
+import instance from '@/services/axios';
 
 import crownLogo from '../../../public/crown.svg';
-
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .required(ERROR_MESSAGE.REQUIRED)
-    .email(ERROR_MESSAGE.EMAIL),
-  password: yup.string().required(ERROR_MESSAGE.REQUIRED),
-});
-
-const defaultValues = {
-  email: '',
-  password: '',
-};
 
 export default function Login() {
   const { setIsAuthenticated } = useContext(UserContext);
 
-  const { control, handleSubmit } = useForm({
-    defaultValues,
-    resolver: yupResolver(schema),
+  const { mutate } = useMutation({
+    mutationFn: async ({ email, password }) => {
+      const response = await instance.post('/login', { email, password });
+      return response;
+    },
+    onSuccess: () => {
+      localStorage.setItem('user', 1);
+      setIsAuthenticated(true);
+      toast.success('Login!');
+    },
+    onError: () => {
+      toast.error('Login fail!');
+    },
   });
-
-  const handleSubmitForm = (values) => {};
 
   return (
     <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden">
@@ -39,19 +34,36 @@ export default function Login() {
         <div className="flex justify-center pb-4">
           <img src={crownLogo} alt="logo" />
         </div>
-        <form onSubmit={handleSubmit(handleSubmitForm)} className="space-y-4">
-          <Input label="Email Address" name="email" control={control} />
-          <Input label="Password" name="password" control={control} />
-          <div>
-            <button
-              type="button"
-              onClick={() => setIsAuthenticated(true)}
-              className="btn btn-block"
-            >
-              Login
-            </button>
-          </div>
-        </form>
+        <Form onFinish={mutate}>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: 'Please input email!',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Password"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input email!',
+              },
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+
+          <Button type="primary" htmlType="submit">
+            Login
+          </Button>
+        </Form>
       </div>
     </div>
   );

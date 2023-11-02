@@ -14,6 +14,7 @@ export default function AddEditMaterialModal({ size, open, onCancel }) {
     mutationFn: size ? (values) => updateSize(values, size.id) : createSize,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sizes'] });
+      onCancel();
       toast.success(
         size ? 'Update size successful.' : 'Created size successful',
       );

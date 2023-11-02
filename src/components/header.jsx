@@ -20,7 +20,10 @@ export default function Header() {
         <div>
           <button
             type="button"
-            onClick={() => setIsAuthenticated(false)}
+            onClick={() => {
+              setIsAuthenticated(false);
+              localStorage.removeItem('user');
+            }}
             className="cursor-pointer"
           >
             LOGOUT

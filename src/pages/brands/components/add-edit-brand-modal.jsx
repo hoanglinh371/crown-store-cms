@@ -14,6 +14,7 @@ function AddEditBrandModal({ open, onCancel, brand }) {
     mutationFn: brand ? (values) => updateBrand(values, brand.id) : createBrand,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['brands'] });
+      onCancel();
       toast.success(
         brand ? 'Update brand successful.' : 'Add brand successful.',
       );

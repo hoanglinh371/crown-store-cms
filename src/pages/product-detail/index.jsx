@@ -170,7 +170,7 @@ export default function ProductDetail() {
 
       <AddProductDetailModal
         open={isFormOpen}
-        product-item={selectedProductsDetail}
+        productItem={selectedProductsDetail}
         onCancel={onCancel}
       />
     </Flex>

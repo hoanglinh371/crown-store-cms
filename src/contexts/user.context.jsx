@@ -6,7 +6,9 @@ const UserContext = React.createContext({
 });
 
 function UserProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const isLogin = !!localStorage.getItem('user');
+
+  const [isAuthenticated, setIsAuthenticated] = useState(isLogin);
 
   return (
     <UserContext.Provider

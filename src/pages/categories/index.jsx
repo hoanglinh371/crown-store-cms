@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Table, Divider, Card, Button, Popconfirm, Flex } from 'antd';
+import { Table, Divider, Card, Button, Popconfirm, Flex, Image } from 'antd';
 import { toast } from 'sonner';
 
 import { getCategories, deleteCategory } from '@/services';
@@ -52,7 +52,7 @@ export default function CategoriesPage() {
       key: 'image',
       dataIndex: 'category_image',
       render: (value) => (
-        <img src={value} alt="img" width={192} className="rounded-3xl" />
+        <Image src={value} alt="img" width={192} className="rounded-3xl" />
       ),
     },
     {

@@ -14,6 +14,7 @@ export default function AddEditColorModal({ color, open, onCancel }) {
     mutationFn: color ? (values) => updateColor(values, color.id) : createColor,
     onSuccess: () => {
       queryClient.invalidateQueries();
+      onCancel();
       toast.success(
         color ? 'Update color successful.' : 'Add color successful',
       );
