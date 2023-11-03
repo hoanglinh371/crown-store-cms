@@ -83,7 +83,12 @@ export default function Material() {
           </Button>
         }
       >
-        <Table columns={columns} dataSource={data?.data} loading={isLoading} />
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          loading={isLoading}
+          pagination={false}
+        />
       </Card>
 
       <AddEditMaterialModal
