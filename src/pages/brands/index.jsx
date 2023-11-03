@@ -101,8 +101,8 @@ export default function BrandsPage() {
           dataSource={data?.data}
           loading={isLoading}
           pagination={{
-            total: data?.metadata.total,
-            pageSize: data?.metadata.per_page,
+            total: data?.pagination.total_pages,
+            pageSize: data?.pagination.per_page,
             onChange: (_page) => _page + 1,
           }}
         />
