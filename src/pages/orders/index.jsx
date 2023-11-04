@@ -29,6 +29,8 @@ function Orders() {
     },
   ];
 
+  const handleRowClick = (record) => navigate(`/orders/${record.id}`);
+
   return (
     <div className="space-y-12">
       <div className="flex items-center justify-between">
@@ -48,7 +50,7 @@ function Orders() {
           dataSource={data?.data}
           loading={isLoading}
           onRow={(record) => ({
-            onClick: () => navigate(`/orders/${record.id}`),
+            onClick: () => handleRowClick(record),
           })}
           pagination={{
             total: data?.metadata.total,

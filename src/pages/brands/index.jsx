@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Table, Card, Button, Divider, Popconfirm } from 'antd';
-import { useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import DeleteModalTrigger from '@/components/delete-modal-trigger';
@@ -12,16 +11,16 @@ import { deleteBrand, getBrands } from '@/services';
 import AddEditBrandModal from './components/add-edit-brand-modal';
 
 export default function BrandsPage() {
+  const [queryObj, setQueryObj] = useState({
+    page: 1,
+  });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedBrand, setSelectedBrand] = useState();
 
-  const [searchParams] = useSearchParams();
-  const page = searchParams.get('page') ?? 1;
-
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['brands', { page }],
-    queryFn: () => getBrands({ page }),
+    queryKey: ['brands', queryObj],
+    queryFn: () => getBrands(queryObj),
   });
 
   const { mutate } = useMutation({
@@ -101,9 +100,9 @@ export default function BrandsPage() {
           dataSource={data?.data}
           loading={isLoading}
           pagination={{
-            total: data?.pagination.total_pages,
-            pageSize: data?.pagination.per_page,
-            onChange: (_page) => _page + 1,
+            total: data?.metadata.total,
+            pageSize: data?.metadata.per_page,
+            onChange: (page) => setQueryObj({ ...queryObj, page }),
           }}
         />
       </Card>

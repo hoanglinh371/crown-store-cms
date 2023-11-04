@@ -93,7 +93,12 @@ export default function Color() {
           </Button>
         }
       >
-        <Table columns={columns} dataSource={data?.data} loading={isLoading} />
+        <Table
+          columns={columns}
+          dataSource={data?.data}
+          loading={isLoading}
+          pagination={false}
+        />
       </Card>
 
       <AddEditColorModal

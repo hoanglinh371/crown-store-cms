@@ -23,15 +23,11 @@ export default function ProductDetail() {
   const queryClient = useQueryClient();
   const [selectedProductsDetail, setSelectedProductsDetail] = useState();
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [queryObj, setQueryObj] = useState({
-    page: 1,
-    search: '',
-  });
   const { id } = useParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['products', id, queryObj],
-    queryFn: () => getProductsDetail(id, queryObj),
+    queryKey: ['products', { id }],
+    queryFn: () => getProductsDetail(id),
   });
   const { mutate } = useMutation({
     mutationFn: () => deleteProductDetail(selectedProductsDetail.id),
@@ -40,20 +36,6 @@ export default function ProductDetail() {
       toast.success('Deleted product item!');
     },
   });
-
-  const onSearch = (search) => {
-    setQueryObj({
-      ...queryObj,
-      search,
-    });
-  };
-
-  const onChange = (page) => {
-    setQueryObj({
-      ...queryObj,
-      page,
-    });
-  };
 
   const onCancel = () => {
     setSelectedProductsDetail(undefined);
@@ -146,10 +128,6 @@ export default function ProductDetail() {
   ];
   return (
     <Flex vertical gap="large">
-      <Card>
-        <Input.Search onSearch={onSearch} placeholder="Search here..." />
-      </Card>
-
       <Card
         title={<span>Product Items</span>}
         extra={
@@ -162,9 +140,7 @@ export default function ProductDetail() {
           columns={columns}
           dataSource={data?.data.product_items}
           loading={isLoading}
-          pagination={{
-            onChange,
-          }}
+          pagination={false}
         />
       </Card>
 
