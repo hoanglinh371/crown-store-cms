@@ -17,7 +17,7 @@ function Sidebar() {
     <aside className="fixed bottom-0 top-20">
       <div className="h-full w-80 border-r bg-white">
         <CurrentUser {...user} />
-        <Menu items={menuItems} mode="inline" />
+        <Menu items={menuItems} mode="inline" defaultSelectedKeys="/" />
       </div>
     </aside>
   );

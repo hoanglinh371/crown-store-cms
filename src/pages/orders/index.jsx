@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
-import { Table, Card } from 'antd';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Table, Card, Input, Flex } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 import { getOrders } from '@/services';
 
 function Orders() {
-  const [searchParams] = useSearchParams();
-  const page = searchParams.get('page') ?? 1;
   const navigate = useNavigate();
+  const [queryObj, setQueryObj] = useState({
+    phone: '',
+    page: 1,
+  });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['orders', page],
-    queryFn: () => getOrders({ page }),
+    queryKey: ['orders', queryObj],
+    queryFn: () => getOrders(queryObj),
   });
 
   const columns = [
@@ -29,22 +31,29 @@ function Orders() {
     },
   ];
 
+  const handleSearchOrderByUserPhone = (phone) => {
+    setQueryObj({
+      ...queryObj,
+      phone,
+    });
+  };
+
+  const handleTableChange = (page) => {
+    setQueryObj({
+      ...queryObj,
+      page,
+    });
+  };
+
   const handleRowClick = (record) => navigate(`/orders/${record.id}`);
 
   return (
-    <div className="space-y-12">
-      <div className="flex items-center justify-between">
-        <form>
-          <input
-            type="search"
-            name="search"
-            placeholder="Type here"
-            className="input input-bordered w-full max-w-xs"
-          />
-        </form>
-      </div>
+    <Flex vertical gap={32}>
+      <Card title="Search Order">
+        <Input.Search onSearch={handleSearchOrderByUserPhone} />
+      </Card>
 
-      <Card>
+      <Card title="Orders">
         <Table
           columns={columns}
           dataSource={data?.data}
@@ -55,11 +64,11 @@ function Orders() {
           pagination={{
             total: data?.metadata.total,
             pageSize: data?.metadata.per_page,
-            onChange: (_page) => _page + 1,
+            onChange: handleTableChange,
           }}
         />
       </Card>
-    </div>
+    </Flex>
   );
 }
 

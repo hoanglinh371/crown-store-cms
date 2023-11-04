@@ -71,7 +71,16 @@ export default function AddEditMaterialModal({ material, open, onCancel }) {
           <Input />
         </Form.Item>
 
-        <Form.Item label={<span>Description</span>} name="material_desc">
+        <Form.Item
+          label={<span>Description</span>}
+          name="material_desc"
+          rules={[
+            {
+              required: true,
+              message: 'Please input material description!',
+            },
+          ]}
+        >
           <Input.TextArea />
         </Form.Item>
       </Form>

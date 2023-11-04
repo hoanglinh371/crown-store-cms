@@ -75,31 +75,36 @@ function OrderDetail() {
 
   return (
     <>
-      <h1 className=" my-5 flex text-2xl font-bold">
-        Thông tin đơn hàng <p className="ml-3">#{data?.data?.id}</p>
-      </h1>
+      <Card
+        title={
+          <>
+            <h1 className=" my-5 flex text-2xl font-bold">
+              Thông tin đơn hàng <p className="ml-3">#{data?.data?.id}</p>
+            </h1>
 
-      <p>
-        Ngày đặt hàng:
-        {data?.data?.order_date}
-      </p>
-      <p>
-        Tên người nhận: {data?.data?.user && data?.data?.user.first_name}
-        {data?.data?.user && data?.data?.user.last_name}
-      </p>
-      <p>
-        Email:
-        {data?.data?.user && data?.data?.user.email}
-      </p>
-      <p>
-        Số điện thoại:
-        {data?.data?.user && data?.data?.user.phone}
-      </p>
-      <p>
-        Địa chỉ:
-        {data?.data?.user && data?.data?.user.address}
-      </p>
-      <Card title="Order details">
+            <p>
+              Ngày đặt hàng:
+              {data?.data?.order_date}
+            </p>
+            <p>
+              Tên người nhận: {data?.data?.user && data?.data?.user.first_name}
+              {data?.data?.user && data?.data?.user.last_name}
+            </p>
+            <p>
+              Email:
+              {data?.data?.user && data?.data?.user.email}
+            </p>
+            <p>
+              Số điện thoại:
+              {data?.data?.user && data?.data?.user.phone}
+            </p>
+            <p>
+              Địa chỉ:
+              {data?.data?.user && data?.data?.user.address}
+            </p>
+          </>
+        }
+      >
         <Table
           columns={columns}
           dataSource={data?.data?.order_lines}
