@@ -27,7 +27,7 @@ export default function BrandsPage() {
     mutationFn: () => deleteBrand(selectedBrand.id),
     onSuccess: () => {
       refetch();
-      toast.success('Category deleted!');
+      toast.success('Brand deleted!');
     },
   });
 
@@ -76,8 +76,9 @@ export default function BrandsPage() {
               title="Delete brand"
               description="Are you sure to delete this brand?"
               onConfirm={mutate}
+              onCancel={() => setSelectedBrand(undefined)}
             >
-              <DeleteOutlined />
+              <DeleteOutlined onClick={() => setSelectedBrand(record)} />
             </Popconfirm>
           </span>
         </span>
@@ -112,8 +113,6 @@ export default function BrandsPage() {
         onCancel={onCancel}
         brand={selectedBrand}
       />
-
-      <DeleteModalTrigger open={isDeleteOpen} onOpenChange={setIsDeleteOpen} />
     </>
   );
 }

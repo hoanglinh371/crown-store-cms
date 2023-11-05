@@ -1,26 +1,14 @@
 import React, { useState } from 'react';
 
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Table,
-  Card,
-  Divider,
-  Button,
-  Input,
-  Flex,
-  Popconfirm,
-  Image,
-} from 'antd';
+import { useQuery } from '@tanstack/react-query';
+import { Table, Card, Button, Flex, Image } from 'antd';
 import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
 
-import { getProductsDetail, deleteProductDetail } from '@/services';
+import { getProductsDetail } from '@/services';
 
 import AddProductDetailModal from './components/add-product-detail-modal';
 
 export default function ProductDetail() {
-  const queryClient = useQueryClient();
   const [selectedProductsDetail, setSelectedProductsDetail] = useState();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const { id } = useParams();
@@ -29,28 +17,13 @@ export default function ProductDetail() {
     queryKey: ['products', { id }],
     queryFn: () => getProductsDetail(id),
   });
-  const { mutate } = useMutation({
-    mutationFn: () => deleteProductDetail(selectedProductsDetail.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['product-items']);
-      toast.success('Deleted product item!');
-    },
-  });
 
   const onCancel = () => {
     setSelectedProductsDetail(undefined);
     setIsFormOpen(false);
   };
 
-  const onConfirm = () => {
-    mutate();
-  };
   const columns = [
-    {
-      key: 'id',
-      title: 'Id',
-      dataIndex: 'product_id',
-    },
     {
       key: 'sku',
       title: 'Sku',
@@ -101,31 +74,8 @@ export default function ProductDetail() {
       title: 'Price',
       dataIndex: 'price',
     },
-    {
-      key: 'action',
-      title: 'Action',
-      render: (_, record) => (
-        <span>
-          <span>
-            <EditOutlined
-              onClick={() => {
-                setSelectedProductsDetail(record);
-                setIsFormOpen(true);
-              }}
-            />
-          </span>
-          <Divider type="vertical" />
-          <Popconfirm
-            title="Delete product"
-            description="Are you sure to delete this product?"
-            onConfirm={onConfirm}
-          >
-            <DeleteOutlined onClick={() => setSelectedProductsDetail(record)} />
-          </Popconfirm>
-        </span>
-      ),
-    },
   ];
+
   return (
     <Flex vertical gap="large">
       <Card

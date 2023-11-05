@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Table, Space, Divider, Card, Button } from 'antd';
-import { useSearchParams } from 'react-router-dom';
+import { Table, Space, Divider, Card, Input } from 'antd';
 
 import { getUsers } from '@/services';
 
 function UsersPage() {
-  const [searchParams] = useSearchParams();
-  const search = searchParams.get('search') ?? '';
-  const page = searchParams.get('page') ?? 1;
+  const [queryObj, setQueryObj] = useState({
+    page: 1,
+    search: '',
+  });
 
   const handleDeleteIconClick = () => {};
 
   const { data, isLoading } = useQuery({
-    queryKey: ['users', { page, search }],
-    queryFn: () => getUsers({ page, search }),
+    queryKey: ['users', queryObj],
+    queryFn: () => getUsers(queryObj),
   });
+
+  const handleTableChange = (page) => {
+    setQueryObj({
+      ...queryObj,
+      page,
+    });
+  };
+
+  const handleSearch = (search) => {
+    setQueryObj({
+      ...queryObj,
+      search,
+    });
+  };
 
   const columns = [
     {
@@ -39,37 +53,28 @@ function UsersPage() {
       title: 'Address',
       dataIndex: 'address',
     },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="small">
-          <EditOutlined />
-          <Divider type="vertical" />
-          <DeleteOutlined onClick={() => handleDeleteIconClick(record.id)} />
-        </Space>
-      ),
-    },
   ];
 
   return (
     <div className="space-y-12">
       <Card>
-        <form>
-          <input
-            type="search"
-            name="search"
-            placeholder="Search here..."
-            className="input input-bordered w-full max-w-sm"
-          />
-        </form>
+        <Input.Search
+          onSearch={handleSearch}
+          placeholder="Search by phone number"
+        />
       </Card>
 
       <Card title="Users">
         <Table
           columns={columns}
           loading={isLoading}
-          dataSource={data?.data.users}
+          dataSource={data?.data}
+          pagination={{
+            total: data?.metadata.total,
+            pageSize: data?.metadata.per_page,
+            onChange: (page) => setQueryObj({ ...queryObj, page }),
+          }}
+          onChange={handleTableChange}
         />
       </Card>
     </div>

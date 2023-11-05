@@ -1,13 +1,12 @@
 import React from 'react';
 
 import { useQuery } from '@tanstack/react-query';
+import { Card } from 'antd';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 
 import { getReports } from '@/services/reports';
-
-import { Card } from 'antd';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
